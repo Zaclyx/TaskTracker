@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { FakeAPIService } from './_fake/fake-api.service';
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getFirestore, provideFirestore } from "@angular/fire/firestore";
+import { SharedService } from './shared.service';
 
 // #fake-end#
 
@@ -56,6 +57,7 @@ function appInitializer(authService: AuthService) {
       multi: true,
       deps: [AuthService],
     },
+    SharedService,
   ],
   bootstrap: [AppComponent],
 })

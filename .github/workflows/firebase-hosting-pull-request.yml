@@ -19,3 +19,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TASKTRACKER_A5168 }}'
           projectId: tasktracker-a5168
+        env: 
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
+
+
