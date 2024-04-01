@@ -14,7 +14,11 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.service.getTasks().subscribe((res) => {
       const testData = res;
-      console.log(testData);
+      console.log("getTasks:",testData);
+    })
+    this.service.getListOfReminders().subscribe((res) => {
+      const testData = res;
+      console.log("getListOfReminders:",testData);
     })
   }
 }
