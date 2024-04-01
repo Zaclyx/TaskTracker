@@ -16,6 +16,8 @@ import { FakeAPIService } from './_fake/fake-api.service';
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getFirestore, provideFirestore } from "@angular/fire/firestore";
 import { SharedService } from './shared.service';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 // #fake-end#
 
@@ -31,6 +33,8 @@ function appInitializer(authService: AuthService) {
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    AngularFireModule,
+    AngularFirestoreModule,
     BrowserModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot(),
