@@ -122,7 +122,7 @@
           }
         },
         "deploy": {
-          "buider": "@angular/fire:deploy",
+          "builder": "@angular/fire:deploy",
           "options": {
             "version": 2
           },
