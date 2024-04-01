@@ -13,6 +13,9 @@ import { AuthService } from './modules/auth/services/auth.service';
 import { environment } from 'src/environments/environment';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
+import { getFirestore, provideFirestore } from "@angular/fire/firestore";
+
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -43,6 +46,8 @@ function appInitializer(authService: AuthService) {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [
     {

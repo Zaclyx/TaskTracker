@@ -1,5 +1,19 @@
 {
   "projects": {
     "default": "tasktracker-a5168"
+  },
+  "targets": {
+    "tasktracker-a5168": {
+      "hosting": {
+        "default": [
+          "tasktracker-a5168"
+        ]
+      }
+    }
+  },
+  "etags": {
+    "tasktracker-a5168": {
+      "extensionInstances": {}
+    }
   }
 }

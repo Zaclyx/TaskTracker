@@ -18,7 +18,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/demo6",
             "allowedCommonJsDependencies": [
@@ -28,8 +28,10 @@
               "prismjs"
             ],
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -118,6 +120,23 @@
               "src/**/*.html"
             ]
           }
+        },
+        "deploy": {
+          "buider": "@angular/fire:deploy",
+          "options": {
+            "version": 2
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "demo6:build:production",
+              "serveTarget": "demo6:serve:production"
+            },
+            "development": {
+              "buildTarget": "demo6:build:development",
+              "serveTarget": "demo6:serve:development"  
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

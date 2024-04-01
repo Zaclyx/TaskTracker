@@ -22,20 +22,28 @@
       ]
     }
   ],
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
+  "hosting": [
+    {
+      "target": "default",
+      "public": "dist/demo6/browser",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "site": "tasktracker-a5168",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ],
   "storage": {
     "rules": "storage.rules"
   },

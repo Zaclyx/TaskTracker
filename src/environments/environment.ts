@@ -155,6 +155,15 @@ export const environment = {
       'published': false,
       'thumbnail': './assets/media/demos/demo20.png'
     },
+    firebase: {
+      apiKey: "AIzaSyAT0iyYyuI2i-4-FPL2b8vTpp5-GxEXQeg",
+      authDomain: "tasktracker-a5168.firebaseapp.com",
+      projectId: "tasktracker-a5168",
+      storageBucket: "tasktracker-a5168.appspot.com",
+      messagingSenderId: "480458112471",
+      appId: "1:480458112471:web:2ee3cd039f25c2cc715f92",
+      measurementId: "G-SYRZK7MBWW"
+    }
   },
 };
 
