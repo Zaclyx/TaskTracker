@@ -27,8 +27,8 @@ export class SharedService {
           console.log(reminder);
           console.log(userRef);
           console.log(customerRef);
-          console.log(customerDocData);
-          console.log(userDocData);
+          console.log({...customerDocData});
+          console.log({...userDocData});
         })
       })
     }
