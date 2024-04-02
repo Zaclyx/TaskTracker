@@ -23,11 +23,9 @@ export class SharedService {
         document.map(async reminder => {
           const userRef = reminder.user;
           const customerRef = reminder.customer;
-          await docData(userRef).forEach((user) =>{
-              if (user != undefined || user != null ){
-                userData = user.username;
-              }
-          });
+          await docData(userRef).subscribe(user => {
+            userData = user;
+          })
           const customerDocData = await docData(customerRef);
           console.log(reminder);
           console.log(userData);
