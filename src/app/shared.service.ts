@@ -21,12 +21,11 @@ export class SharedService {
       return remindersData.pipe(
         map(reminder => {
           return reminder.map(document => {
-            const data = document.data();
             const id = document.id;
-            const user = data.user;
+            const user = document.user;
             const userRef = doc(this.fs,user);
             const userData = docData(userRef);
-            const customer = data.customer;
+            const customer = document.customer;
             const customerRef = doc(this.fs, customer);
             const customerData = docData(customerRef);
             return {
