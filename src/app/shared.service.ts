@@ -22,9 +22,11 @@ export class SharedService {
         document.map(async reminder => {
           const userRef = reminder.user;
           const customerRef = reminder.customer;
-          const userDocData = await docData(userRef.path);
-          const customerDocData = await docData(customerRef.path);
+          const userDocData = await docData(userRef);
+          const customerDocData = await docData(customerRef);
           console.log(reminder);
+          console.log(userRef);
+          console.log(customerRef);
           console.log(customerDocData);
           console.log(userDocData);
         })
