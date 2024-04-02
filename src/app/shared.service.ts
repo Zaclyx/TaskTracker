@@ -16,19 +16,22 @@ export class SharedService {
     // }
 
     async getListOfReminders(){
+      let userData: any;
       let remindersCollection = collection(this.fs, 'reminders');
       const remindersData = collectionData(remindersCollection, {idField:'id'});
       return remindersData.subscribe(document => {
         document.map(async reminder => {
           const userRef = reminder.user;
           const customerRef = reminder.customer;
-          const userDocData = await docData(userRef);
+          await docData(userRef).forEach((user) =>{
+              if (user != undefined || user != null ){
+                userData = user.username;
+              }
+          });
           const customerDocData = await docData(customerRef);
           console.log(reminder);
-          console.log(userRef);
+          console.log(userData);
           console.log(customerRef);
-          console.log({...customerDocData});
-          console.log({...userDocData});
         })
       })
     }
