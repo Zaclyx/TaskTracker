@@ -17,9 +17,6 @@ export class DashboardComponent implements OnInit {
     //   console.log("getTasks:",testData);
     // })
 
-    this.service.getListOfReminders().subscribe((res) => {
-      const testData = res;
-      console.log("getTasks:",testData);
-    })
+    this.service.getListOfReminders();
   }
 }
