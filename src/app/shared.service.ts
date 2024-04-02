@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Firestore, collection, collectionChanges, collectionData, doc, docData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionChanges, collectionData, doc, docData, getDocs } from '@angular/fire/firestore';
 import { Observable, combineLatest, map, switchMap } from "rxjs";
 
 @Injectable({
@@ -15,28 +15,19 @@ export class SharedService {
     //     return collectionData(tasksCollection, {idField:'id'});
     // }
 
-    getListOfReminders(){
+    async getListOfReminders(){
       let remindersCollection = collection(this.fs, 'reminders');
       const remindersData = collectionData(remindersCollection, {idField:'id'});
-      return remindersData.pipe(
-        map(reminder => {
-          return reminder.map(document => {
-            const id = document.id;
-            const user = document.user;
-            const userRef = doc(this.fs,user);
-            const userData = docData(userRef);
-            const customer = document.customer;
-            const customerRef = doc(this.fs, customer);
-            const customerData = docData(customerRef);
-            return {
-              ...document,
-              id,
-              customer: customerData,
-              user: userData,
-            }
-          }
-          );
+      return remindersData.subscribe(document => {
+        document.map(async reminder => {
+          const userRef = reminder.user;
+          const customerRef = reminder.customer;
+          const userDocData = await docData(userRef);
+          const customerDocData = await docData(customerRef);
+          console.log(reminder);
+          console.log(customerDocData);
+          console.log(userDocData);
         })
-      )
+      })
     }
 }
