@@ -25,6 +25,8 @@ export class SharedService {
           const userDocData = await docData(userRef);
           const customerDocData = await docData(customerRef);
           console.log(reminder);
+          console.log(userRef);
+          console.log(customerRef);
           console.log(customerDocData);
           console.log(userDocData);
         })
