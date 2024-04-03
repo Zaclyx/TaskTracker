@@ -3,9 +3,9 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { ICreateAccount, inits } from '../create-account.helper';
 @Component({
   selector: 'app-horizontal',
-  templateUrl: './horizontal.component.html',
+  templateUrl: './monthlytasks.component.html',
 })
-export class HorizontalComponent implements OnInit, OnDestroy {
+export class MonthlyTasksComponent implements OnInit, OnDestroy {
   formsCount = 5;
   account$: BehaviorSubject<ICreateAccount> =
     new BehaviorSubject<ICreateAccount>(inits);
