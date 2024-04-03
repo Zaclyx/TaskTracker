@@ -22,11 +22,6 @@ const Routing: Routes = [
       import('../modules/account/account.module').then((m) => m.AccountModule),
   },
   {
-    path: 'crafted/pages/wizards',
-    loadChildren: () =>
-      import('../modules/wizards/wizards.module').then((m) => m.WizardsModule),
-  },
-  {
     path: 'crafted/widgets',
     loadChildren: () =>
       import('../modules/widgets-examples/widgets-examples.module').then(
@@ -37,6 +32,16 @@ const Routing: Routes = [
     path: 'apps/chat',
     loadChildren: () =>
       import('../modules/apps/chat/chat.module').then((m) => m.ChatModule),
+  },
+  {
+    path: 'weeklytasks',
+    loadChildren: () =>
+      import('./weeklytasks/weeklytasks.module').then((m) => m.WeeklyTasksModule),
+  },
+  {
+    path: 'monthlytasks',
+    loadChildren: () =>
+      import('./monthlytasks/monthlytasks.module').then((m) => m.MonthlyTasksModule),
   },
   {
     path: '',
