@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HorizontalComponent } from './horizontal/horizontal.component';
-import { VerticalComponent } from './vertical/vertical.component';
+import { MonthlyTasksComponent } from './monthlytasks/monthlytasks.component';
+import { WeeklyTaskComponent } from './weeklytasks/weeklytasks.component';
 import { WizardsComponent } from './wizards.component';
 
 const routes: Routes = [
@@ -10,15 +10,15 @@ const routes: Routes = [
     component: WizardsComponent,
     children: [
       {
-        path: 'horizontal',
-        component: HorizontalComponent,
+        path: 'monthlytasks',
+        component: MonthlyTasksComponent,
       },
       {
-        path: 'vertical',
-        component: VerticalComponent,
+        path: 'weeklytasks',
+        component: WeeklyTaskComponent,
       },
-      { path: '', redirectTo: 'horizontal', pathMatch: 'full' },
-      { path: '**', redirectTo: 'horizontal', pathMatch: 'full' },
+      // { path: '', redirectTo: 'horizontal', pathMatch: 'full' },
+      // { path: '**', redirectTo: 'horizontal', pathMatch: 'full' },
     ],
   },
 ];

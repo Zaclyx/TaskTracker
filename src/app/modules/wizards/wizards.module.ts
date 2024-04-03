@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
-import { HorizontalComponent } from './horizontal/horizontal.component';
-import { VerticalComponent } from './vertical/vertical.component';
+import { MonthlyTasksComponent } from './monthlytasks/monthlytasks.component';
+import { WeeklyTaskComponent } from './weeklytasks/weeklytasks.component';
 import { WizardsRoutingModule } from './wizards-routing.module';
 import { WizardsComponent } from './wizards.component';
 import { Step1Component } from './steps/step1/step1.component';
@@ -15,8 +15,8 @@ import { SharedModule } from "../../_metronic/shared/shared.module";
 
 @NgModule({
   declarations: [
-    HorizontalComponent,
-    VerticalComponent,
+    MonthlyTasksComponent,
+    WeeklyTaskComponent,
     WizardsComponent,
     Step1Component,
     Step2Component,

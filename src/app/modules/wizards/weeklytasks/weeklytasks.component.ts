@@ -4,9 +4,9 @@ import { ICreateAccount, inits } from '../create-account.helper';
 
 @Component({
   selector: 'app-vertical',
-  templateUrl: './vertical.component.html',
+  templateUrl: './weeklytasks.component.html',
 })
-export class VerticalComponent implements OnInit, OnDestroy {
+export class WeeklyTaskComponent implements OnInit, OnDestroy {
   formsCount = 5;
   account$: BehaviorSubject<ICreateAccount> =
     new BehaviorSubject<ICreateAccount>(inits);
