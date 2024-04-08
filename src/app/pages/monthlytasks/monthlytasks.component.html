@@ -1,6 +1,76 @@
+
+
 <div class="card">
   <div class="card-body">
-    <div
+      <div aria-label="Page navigation example" class="mt-6">
+          <ul class="pagination justify-content-start" style="list-style-type: none; display: flex; justify-content: flex-start;">
+            <li class="page-item mr-10" >
+              <a class="page-link" style="color: #007bff;">Previous</a>
+            </li>
+            <li class="page-item mr-10">
+              <a class="page-link" style="color: #007bff;" href="#">week 1 for Year 1 - Date 2024</a>
+            </li>
+            <li class="page-item mr-10">
+              <a class="page-link" style="color: #007bff;">Next</a>
+            </li>
+          </ul>
+      </div>
+      <div id="accordion">
+          <div>
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#customer1" aria-expanded="true"
+                      aria-controls="customer1">
+                      Customer 1
+                  </button>
+              </div>
+        
+              <div id="customer1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="card mt-5 mb-5 ml-5">
+                          <div class="card-body">
+                              <h2 class="card-title">Task 1</h2>
+                              <div>
+                                  <p class="card-text">Task description goes here.</p>
+                                  <div class="mb-3">
+                                  <div class="input-group">
+                                      <input type="text" class="form-control" placeholder="Add Details" aria-label="Add Details" aria-describedby="basic-addon2">
+                                      <div class="input-group-append">
+                                      <button class="btn btn-outline-secondary" type="button">Update Mandatory Comment</button>
+                                      </div>
+                                  </div>
+                                  </div>
+                                  <div>
+                                  <button class="btn btn-primary mb-3">Mark as complete</button>
+                                  </div>
+                              </div>
+                              <div class="card-footer bg-transparent border-success">
+                                  <div class="mb-3">
+                                      <div class="input-group">
+                                          <input type="text" class="form-control" placeholder="Add comments" aria-label="Add comments" aria-describedby="basic-addon2">
+                                          <div class="input-group-append">
+                                          <button class="btn btn-outline-secondary" type="button">Add Comment</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div>
+                                      <p><i>John Doe</i> says <b>This is a comment</b> ~ <i>2024-04-02</i></p>
+                                      <p><a>remove comment</a></p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+    <!-- <div
       class="stepper stepper-links d-flex flex-column pt-15"
       id="kt_create_account_stepper"
     >
@@ -132,6 +202,6 @@
           </ng-container>
         </div>
       </form>
-    </div>
+    </div> -->
   </div>
 </div>
