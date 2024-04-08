@@ -2,20 +2,20 @@ import { DocumentReference } from "@angular/fire/firestore";
 
 export interface TaskInterfaceDTO {
     description?: string;
-    reminder?: DocumentReference;
+    reminder?: string;
     status?: boolean;
     title?: string;
 }
 
 export class TaskClassDTO implements TaskInterfaceDTO{
     description?: string;
-    reminder?: DocumentReference;
+    reminder?: string;
     status?: boolean;
     title?: string;
 
     constructor(
         description?: string,
-        reminder?: DocumentReference,
+        reminder?: string,
         status?: boolean,
         title?: string,
     ){

@@ -20,6 +20,7 @@ import { SharedService } from './shared.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { MomentPipe } from './momentpipe';
 // #fake-end#
 
 // function appInitializer(authService: AuthService) {
@@ -40,7 +41,7 @@ function appInitializer(authService: AuthService) {
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, MomentPipe],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

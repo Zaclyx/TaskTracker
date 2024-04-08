@@ -2,8 +2,8 @@ import { DocumentReference } from "@angular/fire/firestore";
 
 export interface ReminderInterfaceDTO {
     additionalAttribute?: string;
-    customer?: DocumentReference;
-    user?: DocumentReference;
+    customer?: string;
+    user?: string;
     type?: string;
     year?: string;
     month?: string;
@@ -12,8 +12,8 @@ export interface ReminderInterfaceDTO {
 
 export class ReminderClassDTO implements ReminderInterfaceDTO{
     additionalAttribute?: string;
-    customer?: DocumentReference;
-    user?: DocumentReference;
+    customer?: string;
+    user?: string;
     type?: string;
     year?: string;
     month?: string;
@@ -21,8 +21,8 @@ export class ReminderClassDTO implements ReminderInterfaceDTO{
 
     constructor(
         additionalAttribute?: string,
-        customer?: DocumentReference,
-        user?: DocumentReference,
+        customer?: string,
+        user?: string,
         type?: string,
         year?: string,
         month?: string,

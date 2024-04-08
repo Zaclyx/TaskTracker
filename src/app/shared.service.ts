@@ -62,26 +62,27 @@ export class SharedService {
       
     }
 
-    getListOfReminders(user: string, type: string, weekmonthyear: string): Observable<any[]> {
+    getListOfReminders(email: string, type: string, weekmonthyear: string): Observable<any[]> {
         let remindersCollection = collection(this.fs, 'reminders');
         let userCollection = collection(this.fs, 'users');
   
       return from((async (): Promise<any[]> => {
         try {
-          const userQuerySnap = await getDocs(query(userCollection, where("username", "==", user)));
-          const userDoc = userQuerySnap.docs[0];
-          const username = userDoc.ref;
+          const userQuerySnap = await getDocs(query(userCollection, where("email", "==", email)));
+          const userDocId = userQuerySnap.docs[0].id;
+          console.log(userDocId);
+
   
           let reminderQuery;
           let reminderQuerySnap;
           if (type === "WEEKLY") {
-            reminderQuery = query(remindersCollection, where("user", "==", username), where('type', '==', type), where('week', '==', weekmonthyear));
+            reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('week', '==', weekmonthyear));
             reminderQuerySnap = await getDocs(reminderQuery);
           } else if (type === "MONTHLY") {
-            reminderQuery = query(remindersCollection, where("user", "==", username), where('type', '==', type), where('month', '==', weekmonthyear));
+            reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('month', '==', weekmonthyear));
             reminderQuerySnap = await getDocs(reminderQuery);
           } else if (type === "YEARLY") {
-            reminderQuery = query(remindersCollection, where("user", "==", username), where('type', '==', type), where('year', '==', weekmonthyear));
+            reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('year', '==', weekmonthyear));
             reminderQuerySnap = await getDocs(reminderQuery);
           }
   
@@ -89,17 +90,18 @@ export class SharedService {
           if(reminderQuerySnap != undefined && !reminderQuerySnap.empty){
             reminderQuerySnap.forEach(async document => {
               const reminderData = document.data();
-              const userRefPath = reminderData.user._key.path.segments.slice(5, 7);
-              const userRef = doc(this.fs, userRefPath.join('/'));
+              const userRef = doc(this.fs, "users", reminderData.user);
               const userData = (await getDoc(userRef)).data();
-              const customerRefPath = reminderData.customer._key.path.segments.slice(5, 7);
-              const customerRef = doc(this.fs, customerRefPath.join('/'));
+              const customerRef = doc(this.fs, "customers", reminderData.customer);
               const customerData = (await getDoc(customerRef)).data();
+              const taskRef = doc(this.fs, "tasks", reminderData.task);
+              const taskData = (await getDoc(taskRef)).data();
               const reminderDataStart = reminderData.start.toDate();
               remindersData.push({
                 ...reminderData,
                 start: reminderDataStart,
-                user: userData?.username,
+                user: userData,
+                task: taskData,
                 customer: customerData,
               });
             });
