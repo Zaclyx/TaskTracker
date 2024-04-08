@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from 'src/app/shared.service';
+import { ReminderClassDTO } from 'src/app/sharedInterfaceDTO/reminderInterfaceDTO';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,11 +13,20 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.service.getTasks().subscribe((res) => {
-    //   const testData = res;
-    //   console.log("getTasks:",testData);
-    // })
 
-    this.service.getListOfReminders();
+    const reminderClassDTO = new ReminderClassDTO( 
+      'Not Used',
+      'Team Goals',
+      'Test@test.com',
+      'YEARLY',
+      '2024',
+      '0',
+      '0'
+    ); 
+
+    this.service.getListOfReminders("TestUser1","WEEKLY","01").subscribe(res => console.log(res));
+    this.service.getListOfRemindersMetaData("YEARLY").subscribe(res => console.log(res));
+    
+    // this.service.createReminder(reminderClassDTO);
   }
 }
