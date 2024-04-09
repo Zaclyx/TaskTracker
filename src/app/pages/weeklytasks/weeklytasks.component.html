@@ -2,73 +2,84 @@
 
 <div class="card">
     <div class="card-body">
-        <div aria-label="Page navigation example" class="mt-6">
-            <ul class="pagination justify-content-start" style="list-style-type: none; display: flex; justify-content: flex-start;">
-              <li class="page-item mr-10" >
-                <a class="page-link" style="color: #007bff;">Previous</a>
-              </li>
-              <li class="page-item mr-10">
-                <a class="page-link" style="color: #007bff;" href="#">week 1 for Year 1 - Date 2024</a>
-              </li>
-              <li class="page-item mr-10">
-                <a class="page-link" style="color: #007bff;">Next</a>
-              </li>
-            </ul>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div aria-label="Page navigation example" class="mt-6" style="justify-content: center;">
+              <ul class="pagination justify-content-start">
+                <li class="page-item mr-10">
+                  <button (click)="previous()" class="page-link" style="color: #007bff; font-size: medium;">Previous</button>
+                </li>
+                <li class="page-item mr-10">
+                  <a class="page-link" style="color: #007bff; font-size: x-large;">Week {{currentWeek}} for Year {{currentYear}}</a>
+                </li>
+                <li class="page-item mr-10">
+                  <button (click)="next()" class="page-link" style="color: #007bff; font-size: medium;">Next</button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div id="accordion">
-            <div>
-              <div class="card">
-                <div class="card-header" id="headingOne">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#customer1" aria-expanded="true"
-                        aria-controls="customer1">
-                        Customer 1
-                    </button>
-                </div>
-          
-                <div id="customer1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                  <div>
-                    <div class="row">
-                      <div class="col-sm-6">
+        <button (click)="addWeeklyTask()" class="btn btn-primary mt-5 mb-3" style="background-color: forestgreen;">Add Weekly Task</button>
+      </div>
+      <div id="accordion">
+        <div *ngFor="let author of weeklyTasksAuthor">
+          <div class="card">
+            <div id="headingOne" class="text-center">
+              <a style="font-size: x-large; font-weight: bold; display: inline-block; margin-top: 10px;">
+                  {{author}}
+              </a>
+            </div>
+            <div id="customer1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="row">
+                    <div *ngFor="let task of weeklyTasks[author].tasks" class="col-sm-6">
                         <div class="card mt-5 mb-5 ml-5">
-                            <div class="card-body">
-                                <h2 class="card-title">Task 1</h2>
-                                <div>
-                                    <p class="card-text">Task description goes here.</p>
-                                    <div class="mb-3">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Add Details" aria-label="Add Details" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button">Update Mandatory Comment</button>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div>
-                                    <button class="btn btn-primary mb-3">Mark as complete</button>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-transparent border-success">
-                                    <div class="mb-3">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Add comments" aria-label="Add comments" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button">Add Comment</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p><i>John Doe</i> says <b>This is a comment</b> ~ <i>2024-04-02</i></p>
-                                        <p><a>remove comment</a></p>
-                                    </div>
-                                </div>
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                              <h2 class="card-title">{{task.title}}</h2>
+                              <span [ngClass]="task.status === 'Completed' ? 'badge badge-light-success fs-8 fw-bolder' : 'badge badge-light-warning fs-8 fw-bolder'">
+                                {{task.status}}
+                              </span>
                             </div>
+                            <div>
+                              <p class="card-text">{{task.description}}</p>
+                              <div>
+                                <div class="row">
+                                    <div class="col">
+                                      <button (click)="markAsComplete(author, task)" [disabled]="task.status === 'Completed'" [hidden]="task.status === 'Completed'" class="btn btn-primary mb-3">
+                                        Mark as complete
+                                      </button>
+                                    </div>
+                                    <div class="col text-end">
+                                      <button (click)="deleteWeeklyTask(author, task)" [disabled]="author !== userName" class="btn btn-primary mb-3" style="background-color: crimson;">
+                                        Delete Task
+                                      </button>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                              <!-- <div class="card-footer bg-transparent border-success">
+                                  <div class="mb-3">
+                                      <div class="input-group">
+                                          <input type="text" class="form-control" placeholder="Add comments" aria-label="Add comments" aria-describedby="basic-addon2">
+                                          <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button">Add Comment</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div>
+                                      <p><i>John Doe</i> says <b>This is a comment</b> ~ <i>2024-04-02</i></p>
+                                      <p><a>remove comment</a></p>
+                                  </div>
+                              </div> -->
+                          </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
+      </div>
           
       <!-- <div
         class="stepper stepper-links d-flex flex-column pt-15"
