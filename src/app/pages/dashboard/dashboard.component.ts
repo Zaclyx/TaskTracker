@@ -1,12 +1,11 @@
 import {
   Component,
   OnInit,
-  EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import moment from 'moment';
-import { Observable, Timestamp } from 'rxjs';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { ITimestamp } from 'src/app/modules/models/task.model';
 import { SharedService } from 'src/app/shared.service';
 
@@ -19,7 +18,9 @@ export class DashboardComponent implements OnInit {
   constructor(
     private service: SharedService,
     private auth: AngularFireAuth,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sharedService: SharedService,
+    private router: Router
   ) {}
 
   uid: string;
@@ -59,6 +60,11 @@ export class DashboardComponent implements OnInit {
     );
     this.userOverdueTasks$ = this.service.getTasks(this.projectId, 'Overdue');
     this.cdr.detectChanges();
+  }
+
+  navigateToWeeklyTask(task: any) {
+    this.sharedService.setCurrentTask(task);
+    this.router.navigate(['/weeklytasks']);
   }
 
   formatDate(duedt: ITimestamp): number {

@@ -25,6 +25,11 @@
       </div>
       <button class="btn btn-primary mt-5 mb-3" style="background-color: forestgreen;" routerLink="/addtasks">Add Task</button>
     </div>
+    <div *ngIf="monthlyTasksAuthor.length == 0">
+      <div class="text-center">
+        <h2>No tasks are due for the month of {{months[currentMonth]}}</h2>
+      </div>
+    </div>
     <div id="accordion">
       <div *ngFor="let author of monthlyTasksAuthor">
         <div class="card">

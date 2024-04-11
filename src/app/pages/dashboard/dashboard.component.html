@@ -34,10 +34,14 @@
                     ></span>
                   </span>
                 </div>
-                <!-- end::Symbol -->
-                <!-- begin::Text -->
-                <div class="d-flex flex-column">
-                  <a class="text-gray-900 text-hover-primary fs-6 fw-bolder">
+                <!-- end::Checkbox -->
+                <!-- begin::Description -->
+                <div class="flex-grow-1">
+                  <a
+                    (click)="navigateToWeeklyTask(task)"
+                    class="text-gray-800 text-hover-primary fw-bolder fs-6"
+                    style="cursor: pointer"
+                  >
                     {{ task.title }}
                   </a>
                   <span class="text-muted fw-bold"
@@ -89,7 +93,11 @@
                 <!-- end::Symbol -->
                 <!-- begin::Text -->
                 <div class="d-flex flex-column">
-                  <a class="text-gray-900 text-hover-primary fs-6 fw-bolder">
+                  <a
+                    (click)="navigateToWeeklyTask(task)"
+                    class="text-gray-900 text-hover-primary fs-6 fw-bolder"
+                    style="cursor: pointer"
+                  >
                     {{ task.title }}
                   </a>
                   <span class="text-muted fw-bold"
@@ -130,22 +138,26 @@
           <ng-container *ngFor="let task of userCompletedTasks$ | async">
             <div class="card-body pt-5">
               <!-- begin::Item -->
-              <div class="d-flex align-items-center mb-7">
-                <!-- begin::Symbol -->
-                <div class="symbol symbol-50px me-5">
-                  <span class="symbol-label bg-light-success">
-                    <span
-                      [inlineSVG]="
-                        './assets/media/icons/duotune/abstract/abs027.svg'
-                      "
-                      class="svg-icon svg-icon-2x svg-icon-success"
-                    ></span>
-                  </span>
-                </div>
-                <!-- end::Symbol -->
-                <!-- begin::Text -->
-                <div class="d-flex flex-column">
-                  <a class="text-gray-900 text-hover-primary fs-6 fw-bolder">
+              <div
+                class="d-flex align-items-center badge-light-success rounded p-5 mb-7"
+              >
+                <!-- begin::Icon -->
+                <span class="svg-icon svg-icon-warning me-5">
+                  <span
+                    [inlineSVG]="
+                      './assets/media/icons/duotune/abstract/abs027.svg'
+                    "
+                    class="svg-icon svg-icon-1"
+                  ></span>
+                </span>
+                <!-- end::Icon -->
+                <!-- begin::Title -->
+                <div class="flex-grow-1 me-2">
+                  <a
+                    (click)="navigateToWeeklyTask(task)"
+                    class="fw-bolder text-gray-800 text-hover-primary fs-6"
+                    style="cursor: pointer"
+                  >
                     {{ task.title }}
                   </a>
                   <span class="badge badge-light-success fs-8 fw-bolder">{{
