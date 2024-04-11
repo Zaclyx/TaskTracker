@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Firestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from '@angular/fire/firestore';
+import { Component } from '@angular/core';
+import { Firestore, collection, doc, getDocs, deleteDoc, updateDoc, query, where } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { SharedService } from 'src/app/shared.service';
 
 
 @Component({
@@ -18,7 +20,7 @@ export class WeeklyTasksComponent{
   public currentYear: number = new Date().getFullYear();
   public years: number[] = Array.from({length: 10}, (v, k) => k + this.currentYear - 5);
 
-  constructor(private firestore: Firestore, private auth: AngularFireAuth, private cdr: ChangeDetectorRef) {}
+  constructor(private firestore: Firestore, private auth: AngularFireAuth, private router: Router, private cdr: ChangeDetectorRef, private sharedService: SharedService) {}
 
   ngOnInit() {
     this.auth.authState.subscribe(async (user) => {
@@ -70,7 +72,7 @@ export class WeeklyTasksComponent{
     if (foundTask) {
       foundTask.status = "Completed";
       this.cdr.detectChanges();
-      alert("Task marked as complete successfully");
+      alert("Task marked as 'Complete' successfully");
     }
   }
 
@@ -89,26 +91,32 @@ export class WeeklyTasksComponent{
     this.getWeeklyTasks();
   }
 
-  addTask() {
-    // Add a new document with a generated id.
-    const docRef = collection(this.firestore, 'tasks');
-    const payload = {
-      userId: this.userId,
-      userName: this.userName,
-      title: 'Finish Documentation',
-      description: 'Test description',
-      status: 'In Progress',
-      projectId: this.projectId,
-      duedt: new Date(2024, 11, 27, 10, 30, 0), // Due on 27th December 2024, 10:30 AM
-      createddt: new Date(),
-      updateddt: new Date()
-    };
-    addDoc(docRef, payload).then((result: any) => {
-      alert("Task added successfully");
-      this.weeklyTasks[this.userName].tasks.push({ id: result._key.path.segments[1], ...payload })
-      this.cdr.detectChanges();
-    });
+  navigateToEditTask(task: any) {
+    task.page = 'weekly';
+    this.sharedService.setCurrentTask(task);
+    this.router.navigate(['/edittask']);
   }
+
+  // addTask() {
+  //   // Add a new document with a generated id.
+  //   const docRef = collection(this.firestore, 'tasks');
+  //   const payload = {
+  //     userId: this.userId,
+  //     userName: this.userName,
+  //     title: 'Finish Documentation',
+  //     description: 'Test description',
+  //     status: 'In Progress',
+  //     projectId: this.projectId,
+  //     duedt: new Date(2024, 11, 27, 10, 30, 0), // Due on 27th December 2024, 10:30 AM
+  //     createddt: new Date(),
+  //     updateddt: new Date()
+  //   };
+  //   addDoc(docRef, payload).then((result: any) => {
+  //     alert("Task added successfully");
+  //     this.weeklyTasks[this.userName].tasks.push({ id: result._key.path.segments[1], ...payload })
+  //     this.cdr.detectChanges();
+  //   });
+  // }
 
   next() {
     if (this.currentWeek < 52) {

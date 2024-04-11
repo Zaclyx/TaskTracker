@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <button (click)="addTask()" class="btn btn-primary mt-5 mb-3" style="background-color: forestgreen;">Add Task</button>
+      <button class="btn btn-primary mt-5 mb-3" style="background-color: forestgreen;" routerLink="/addtasks">Add Task</button>
     </div>
     <div id="accordion">
       <div *ngFor="let author of weeklyTasksAuthor">
@@ -49,13 +49,16 @@
                             <div>
                               <div class="row">
                                   <div class="col">
-                                    <button (click)="markAsComplete(author, task)" [disabled]="task.status === 'Completed'" [hidden]="task.status === 'Completed'" class="btn btn-primary mb-3">
+                                    <button (click)="markAsComplete(author, task)" [disabled]="task.status === 'Completed'" [hidden]="task.status === 'Completed'" class="btn btn-primary mb-3" style="background-color:rgb(0, 172, 114);">
                                       Mark as complete
+                                    </button>
+                                    <button (click)="deleteWeeklyTask(author, task)" [disabled]="author !== userName" class="btn btn-primary mb-3" style="background-color: crimson;">
+                                      Delete Task
                                     </button>
                                   </div>
                                   <div class="col text-end">
-                                    <button (click)="deleteWeeklyTask(author, task)" [disabled]="author !== userName" class="btn btn-primary mb-3" style="background-color: crimson;">
-                                      Delete Task
+                                    <button (click)="navigateToEditTask(task)" [disabled]="author !== userName" class="btn btn-primary mb-3">
+                                      Edit Task
                                     </button>
                                   </div>
                               </div>
