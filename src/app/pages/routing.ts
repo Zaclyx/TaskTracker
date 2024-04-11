@@ -39,6 +39,11 @@ const Routing: Routes = [
       import('./weeklytasks/weeklytasks.module').then((m) => m.WeeklyTasksModule),
   },
   {
+    path: 'addtasks',
+    loadChildren: () =>
+      import('./addtasks/addtasks.module').then((m) => m.AddTasksModule),
+  },
+  {
     path: 'monthlytasks',
     loadChildren: () =>
       import('./monthlytasks/monthlytasks.module').then((m) => m.MonthlyTasksModule),
