@@ -23,6 +23,10 @@ export class WeeklyTasksComponent{
   constructor(private firestore: Firestore, private auth: AngularFireAuth, private router: Router, private cdr: ChangeDetectorRef, private sharedService: SharedService) {}
 
   ngOnInit() {
+    this.sharedService.currentTask$.subscribe((task: any) => {
+      const currentTask = task;
+      this.currentWeek = this.getCurrentWeek(currentTask.duedt.toDate());
+    });
     this.auth.authState.subscribe(async (user) => {
       this.userId = user!.uid;
       await this.getUserDetails(this.userId).then((result: any) => {
