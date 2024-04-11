@@ -1,156 +1,219 @@
-import { Injectable } from "@angular/core";
-import { Firestore, Timestamp, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
-import { Observable, from } from "rxjs";
-
+import { Injectable } from '@angular/core';
+import {
+  Firestore,
+  Timestamp,
+  addDoc,
+  and,
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from '@angular/fire/firestore';
+import { Observable, from, interval, switchMap } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class SharedService {
-    constructor(
-        private fs: Firestore
-    ) {}
+  constructor(private fs: Firestore) {}
 
-     // Users Firestore Methods
-    addUser(user: any) {
-      let usersCollection = collection(this.fs, 'users');
-      return addDoc(usersCollection, user);
-    }
-
-    createReminder(ReminderInterfaceDTO: any) {
-      let remindersDataCollection = collection(this.fs, 'reminders');
-        try {
-          const currentTimeStamp = Timestamp.now();
-          const { additionalAttribute, customer, user, type, year, month, week } = ReminderInterfaceDTO;
-          const post = {
-            additionalattribute: additionalAttribute,
-            customer: customer,
-            user: user,
-            type: type,
-            year: year,
-            month: month,
-            week: week,
-            start: currentTimeStamp
-          }
-          addDoc(remindersDataCollection, post);
-        } catch (error) {
-          console.error("Error creating reminder:", error);
-          throw error; // Re-throw error to be caught by the caller
-        }
-    };
-
-    updateReminder(docId:string, ReminderInterfaceDTO: any) {
-      const { additionalAttribute, customer, user, type, year, month, week } = ReminderInterfaceDTO;
-      const currentTimeStamp = Timestamp.now();
-      setDoc(doc(this.fs, "reminders", docId), {
-          additionalattribute: additionalAttribute,
-            customer: customer,
-            user: user,
-            type: type,
-            year: year,
-            month: month,
-            week: week,
-            start: currentTimeStamp
-      })
-    }
-
-    deleteReminder(docId:string){
-      deleteDoc(doc(this.fs, "reminders", docId));
-    }
-
-    createTask(TaskInterfaceDTO: any){
-      
-    }
-
-    getListOfReminders(email: string, type: string, weekmonthyear: string): Observable<any[]> {
-        let remindersCollection = collection(this.fs, 'reminders');
-        let userCollection = collection(this.fs, 'users');
-  
-      return from((async (): Promise<any[]> => {
-        try {
-          const userQuerySnap = await getDocs(query(userCollection, where("email", "==", email)));
-          const userDocId = userQuerySnap.docs[0].id;
-          console.log(userDocId);
-
-  
-          let reminderQuery;
-          let reminderQuerySnap;
-          if (type === "WEEKLY") {
-            reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('week', '==', weekmonthyear));
-            reminderQuerySnap = await getDocs(reminderQuery);
-          } else if (type === "MONTHLY") {
-            reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('month', '==', weekmonthyear));
-            reminderQuerySnap = await getDocs(reminderQuery);
-          } else if (type === "YEARLY") {
-            reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('year', '==', weekmonthyear));
-            reminderQuerySnap = await getDocs(reminderQuery);
-          }
-  
-          const remindersData: any[] = [];
-          if(reminderQuerySnap != undefined && !reminderQuerySnap.empty){
-            reminderQuerySnap.forEach(async document => {
-              const reminderData = document.data();
-              const userRef = doc(this.fs, "users", reminderData.user);
-              const userData = (await getDoc(userRef)).data();
-              const customerRef = doc(this.fs, "customers", reminderData.customer);
-              const customerData = (await getDoc(customerRef)).data();
-              const taskRef = doc(this.fs, "tasks", reminderData.task);
-              const taskData = (await getDoc(taskRef)).data();
-              const reminderDataStart = reminderData.start.toDate();
-              remindersData.push({
-                ...reminderData,
-                start: reminderDataStart,
-                user: userData,
-                task: taskData,
-                customer: customerData,
-              });
-            });
-          }
-          return remindersData;
-        } catch (error) {
-          console.error("Error fetching reminders:", error);
-          throw error; // Re-throw error to be caught by the caller
-        }
-      })());
-    }
-
-    getListOfRemindersMetaData(type: string): Observable<any[]> {
-      let remindersMetaDataCollection = collection(this.fs, 'remindermetadata');
-
-    return from((async (): Promise<any[]> => {
-      try {
-        const reminderQuery = query(remindersMetaDataCollection, where('type', '==', type));
-        const reminderQuerySnap = await getDocs(reminderQuery);
-        const remindersData: any[] = [];
-        if(reminderQuerySnap != undefined && !reminderQuerySnap.empty){
-          reminderQuerySnap.forEach(async document => {
-            const reminderData = document.data();
-            const reminderDataCreatedAt = reminderData.createdat.toDate();
-            const reminderDataUpdatedAt = reminderData.updatedat.toDate();
-            remindersData.push({
-              ...reminderData,
-              createdat: reminderDataCreatedAt,
-              updatedat: reminderDataUpdatedAt,
-            });
-          });
-        }
-        return remindersData;
-      } catch (error) {
-        console.error("Error fetching reminders meta data:", error);
-        throw error; // Re-throw error to be caught by the caller
-      }
-    })());
+  // Users Firestore Methods
+  addUser(user: any) {
+    let usersCollection = collection(this.fs, 'users');
+    return addDoc(usersCollection, user);
   }
 
-  // createTasks(){
-  //   let tasksCollection = collection(this.fs, 'tasks');
-  //   try {
-  //     const currentTimeStamp = Timestamp.now();
-  //     const { description, taskid, reminderuuid, title } = 
-      
-  //   } catch (error) {
-  //     console.error("Error creating tasks:", error);
-  //     throw error; // Re-throw error to be caught by the caller
-  //   }
-  // }
+  getTasks(userId: string, status: string) {
+    let tasksCollection = collection(this.fs, 'tasks');
+    let q;
+    const currentTimeStamp = Timestamp.now();
+    if (status == 'In Progress') {
+      q = query(
+        tasksCollection,
+        where('userId', '==', userId),
+        where('status', '==', status),
+        where('duedt', '>', currentTimeStamp),
+        orderBy('duedt')
+      );
+    } else {
+      q = query(
+        tasksCollection,
+        where('userId', '==', userId),
+        where('status', '==', status),
+        orderBy('duedt')
+      );
+    }
+    return collectionData(q, { idField: 'id' });
+  }
+
+  checkAndUpdateDueDates(): Observable<any> {
+    // Run check every hour
+    return interval(3600000).pipe(
+      switchMap(() => {
+        const tasksCollection = collection(this.fs, 'tasks');
+        return getDocs(tasksCollection); // Returning the promise
+      }),
+      switchMap((snapshot) => {
+        const updates: any[] = [];
+        const currentDate = new Date();
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const dueDate = data.dueDate.toDate(); // Assuming dueDate is a Firestore Timestamp
+
+          if (dueDate < currentDate) {
+            updates.push(
+              setDoc(doc.ref, { status: 'Overdue' }, { merge: true })
+            );
+          }
+        });
+
+        return Promise.all(updates);
+      })
+    );
+  }
 }
+//   createReminder(ReminderInterfaceDTO: any) {
+//     let remindersDataCollection = collection(this.fs, 'reminders');
+//       try {
+//         const currentTimeStamp = Timestamp.now();
+//         const { additionalAttribute, customer, user, type, year, month, week } = ReminderInterfaceDTO;
+//         const post = {
+//           additionalattribute: additionalAttribute,
+//           customer: customer,
+//           user: user,
+//           type: type,
+//           year: year,
+//           month: month,
+//           week: week,
+//           start: currentTimeStamp
+//         }
+//         addDoc(remindersDataCollection, post);
+//       } catch (error) {
+//         console.error("Error creating reminder:", error);
+//         throw error; // Re-throw error to be caught by the caller
+//       }
+//   };
+
+//   updateReminder(docId:string, ReminderInterfaceDTO: any) {
+//     const { additionalAttribute, customer, user, type, year, month, week } = ReminderInterfaceDTO;
+//     const currentTimeStamp = Timestamp.now();
+//     setDoc(doc(this.fs, "reminders", docId), {
+//         additionalattribute: additionalAttribute,
+//           customer: customer,
+//           user: user,
+//           type: type,
+//           year: year,
+//           month: month,
+//           week: week,
+//           start: currentTimeStamp
+//     })
+//   }
+
+//   deleteReminder(docId:string){
+//     deleteDoc(doc(this.fs, "reminders", docId));
+//   }
+
+//   createTask(TaskInterfaceDTO: any){
+
+//   }
+
+//   getListOfReminders(email: string, type: string, weekmonthyear: string): Observable<any[]> {
+//       let remindersCollection = collection(this.fs, 'reminders');
+//       let userCollection = collection(this.fs, 'users');
+
+//     return from((async (): Promise<any[]> => {
+//       try {
+//         const userQuerySnap = await getDocs(query(userCollection, where("email", "==", email)));
+//         const userDocId = userQuerySnap.docs[0].id;
+//         console.log(userDocId);
+
+//         let reminderQuery;
+//         let reminderQuerySnap;
+//         if (type === "WEEKLY") {
+//           reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('week', '==', weekmonthyear));
+//           reminderQuerySnap = await getDocs(reminderQuery);
+//         } else if (type === "MONTHLY") {
+//           reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('month', '==', weekmonthyear));
+//           reminderQuerySnap = await getDocs(reminderQuery);
+//         } else if (type === "YEARLY") {
+//           reminderQuery = query(remindersCollection, where("user", "==", userDocId), where('type', '==', type), where('year', '==', weekmonthyear));
+//           reminderQuerySnap = await getDocs(reminderQuery);
+//         }
+
+//         const remindersData: any[] = [];
+//         if(reminderQuerySnap != undefined && !reminderQuerySnap.empty){
+//           reminderQuerySnap.forEach(async document => {
+//             const reminderData = document.data();
+//             const userRef = doc(this.fs, "users", reminderData.user);
+//             const userData = (await getDoc(userRef)).data();
+//             const customerRef = doc(this.fs, "customers", reminderData.customer);
+//             const customerData = (await getDoc(customerRef)).data();
+//             const taskData = reminderData.task.map(async (taskId: string) => {
+//               const taskRef = doc(this.fs, "tasks", taskId);
+//               const taskSnapshot = await getDoc(taskRef);
+//               return taskSnapshot.data();
+//             })
+//             const reminderDataStart = reminderData.start.toDate();
+//             remindersData.push({
+//               ...reminderData,
+//               start: reminderDataStart,
+//               user: userData,
+//               task: taskData,
+//               customer: customerData,
+//             });
+//           });
+//         }
+//         return remindersData;
+//       } catch (error) {
+//         console.error("Error fetching reminders:", error);
+//         throw error; // Re-throw error to be caught by the caller
+//       }
+//     })());
+//   }
+
+//   getListOfRemindersMetaData(type: string): Observable<any[]> {
+//     let remindersMetaDataCollection = collection(this.fs, 'remindermetadata');
+
+//   return from((async (): Promise<any[]> => {
+//     try {
+//       const reminderQuery = query(remindersMetaDataCollection, where('type', '==', type));
+//       const reminderQuerySnap = await getDocs(reminderQuery);
+//       const remindersData: any[] = [];
+//       if(reminderQuerySnap != undefined && !reminderQuerySnap.empty){
+//         reminderQuerySnap.forEach(async document => {
+//           const reminderData = document.data();
+//           const reminderDataCreatedAt = reminderData.createdat.toDate();
+//           const reminderDataUpdatedAt = reminderData.updatedat.toDate();
+//           remindersData.push({
+//             ...reminderData,
+//             createdat: reminderDataCreatedAt,
+//             updatedat: reminderDataUpdatedAt,
+//           });
+//         });
+//       }
+//       return remindersData;
+//     } catch (error) {
+//       console.error("Error fetching reminders meta data:", error);
+//       throw error; // Re-throw error to be caught by the caller
+//     }
+//   })());
+// }
+
+// // createTasks(){
+// //   let tasksCollection = collection(this.fs, 'tasks');
+// //   try {
+// //     const currentTimeStamp = Timestamp.now();
+// //     const { description, taskid, reminderuuid, title } =
+
+// //   } catch (error) {
+// //     console.error("Error creating tasks:", error);
+// //     throw error; // Re-throw error to be caught by the caller
+// //   }
+// // }

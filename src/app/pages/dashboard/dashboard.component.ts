@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import moment from 'moment';
+import { Observable, Timestamp } from 'rxjs';
+import { ITimestamp } from 'src/app/modules/models/task.model';
 import { SharedService } from 'src/app/shared.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,37 +16,59 @@ import * as moment from 'moment';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  public userEmail: string;
-  public week: string;
-  public year: string;
-  public month: string;
-  public weeklyDashboardData: any[];
-  public monthlyDashboardData: any[];
-  public yearlyDashboardData: any[];
-
   constructor(
     private service: SharedService,
     private auth: AngularFireAuth,
+    private cdr: ChangeDetectorRef
   ) {}
 
+  uid: string;
+  username: string;
+  userInProgressTasks$: Observable<any[]>;
+  userUpcomingTasks$: Observable<any[]>;
+  userCompletedTasks$: Observable<any[]>;
+
   ngOnInit(): void {
-    this.week = moment().format('WW');
-    this.month = moment().format('MM');
-    this.year = moment().format('gggg');
+    this.getUid();
+  }
+
+  getUid() {
     this.auth.authState.subscribe((user) => {
       if (user) {
-        this.userEmail = user.email || "";
+        this.uid = user.uid || '';
       } else {
-        this.userEmail = "";
+        this.uid = '';
       }
-      console.log(this.userEmail);
-      this.service.getListOfReminders(this.userEmail,"WEEKLY", this.week).subscribe(res => {console.log(res); this.weeklyDashboardData = res;} );
-      this.service.getListOfReminders(this.userEmail,"MONTHLY", this.month).subscribe(res => {console.log(res); this.monthlyDashboardData = res;});
-      this.service.getListOfReminders(this.userEmail,"YEARLY", this.year).subscribe(res => {console.log(res); this.yearlyDashboardData = res;});
-    })
+      this.getTasks();
+    });
+  }
 
-    // this.service.getListOfRemindersMetaData("YEARLY").subscribe(res => console.log(res));
-    
-    // this.service.createReminder(reminderClassDTO);
+  getTasks() {
+    this.userInProgressTasks$ = this.service.getTasks(this.uid, 'In Progress');
+    this.userCompletedTasks$ = this.service.getTasks(this.uid, 'Completed');
+    this.cdr.detectChanges();
+  }
+
+  formatDate(duedt: ITimestamp): number {
+    let differenceInDays = 0;
+
+    if (duedt.seconds) {
+      const milliseconds = duedt.seconds * 1000;
+      const providedDate = new Date(milliseconds);
+      const currentDate = new Date();
+
+      const differenceInMilliseconds =
+        providedDate.getTime() - currentDate.getTime();
+
+      differenceInDays = Math.floor(
+        differenceInMilliseconds / (1000 * 60 * 60 * 24)
+      );
+
+      console.log('Difference in days:', differenceInDays);
+
+      return differenceInDays;
+    } else {
+      return differenceInDays;
+    }
   }
 }

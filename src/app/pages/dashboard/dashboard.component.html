@@ -1,54 +1,152 @@
 <div class="jumbotron">
-  <h1 class="display-6">Welcome to Team Task Tracker</h1>
-  <p class="lead">You can now keep track of all the weekly and monthly activities for your customers. Track individual goals on a yearly basis.</p>
-  <hr class="my-4">
-  <p>Visit the weekly and monthly task items to update the status of each activity</p>
-  <div class="row">
-      <div class="col-md-4">
-          <div class="alert alert-primary" role="alert">
-              <h4 class="alert-heading">Weekly Tasks</h4>
-              <hr>
-              <div class="list-group">
-                  <button type="button" class="list-group-item list-group-item-action"
-                      [routerLink]="['/weeklytasks']">
-                      WeeklyReminder - Customer 1
-                      <div>
-                        <span class="badge badge-primary badge-pill">2</span>
-                      </div>
-                  </button>
+  <h1 class="display-6">Overview</h1>
+  <p class="lead">
+    You can now keep track your tasks in an organised and clean way
+  </p>
+  <hr class="my-4" />
+  <div class="row g-5 g-xl-8">
+    <div class="col-xl-4">
+      <div ngClass="card-xl-stretch mb-xl-8">
+        <!-- begin::Header -->
+        <div class="card-header border-0">
+          <h3 class="card-title fw-bolder text-gray-900">In Progress</h3>
+        </div>
+        <!-- end::Header -->
+        <!-- begin::Body -->
+        <ng-container
+          *ngIf="userInProgressTasks$ | async as userInProgressTasks"
+        >
+          <ng-container *ngFor="let task of userInProgressTasks">
+            <div class="card-body pt-2">
+              <!-- begin::Item -->
+              <div class="d-flex align-items-center mb-8">
+                <!-- begin::Bullet -->
+                <span class="bullet bullet-vertical h-40px bg-primary"></span>
+                <!-- end::Bullet -->
+                <!-- begin::Checkbox -->
+                <div class="form-check form-check-custom form-check-solid mx-5">
+                  <input class="form-check-input" type="checkbox" value="" />
+                </div>
+                <!-- end::Checkbox -->
+                <!-- begin::Description -->
+                <div class="flex-grow-1">
+                  <a
+                    href="#"
+                    class="text-gray-800 text-hover-primary fw-bolder fs-6"
+                  >
+                    {{ task.title }}
+                  </a>
+                  <span class="text-muted fw-bold d-block"
+                    >Due in {{ formatDate(task.duedt) }} days</span
+                  >
+                </div>
+                <!-- end::Description -->
+
+                <span class="badge badge-light-warning fs-8 fw-bolder">{{
+                  task.status
+                }}</span>
               </div>
-          </div>
+              <!-- end:Item -->
+            </div>
+          </ng-container>
+        </ng-container>
+        <!-- end::Body -->
       </div>
-      <div class="col-md-4">
-          <div class="alert alert-success" role="alert">
-              <h4 class="alert-heading">Monthly Tasks</h4>
-              <hr>
-              <div class="list-group">
-                  <button class="list-group-item list-group-item-action"
-                      [routerLink]="['/monthlytasks']">
-                      MonthlyReminder - Customer 1
-                      <div>
-                        <span class="badge badge-success badge-pill">2</span>
-                    </div>
-                      
-                  </button>
+    </div>
+    <div class="col-xl-4">
+      <div ngClass="card-xl-stretch mb-xl-8">
+        <!-- begin::Header -->
+        <div class="card-header border-0">
+          <h3 class="card-title fw-bolder text-gray-900">Upcoming</h3>
+        </div>
+        <!-- end::Header -->
+        <!-- begin::Body -->
+        <ng-container *ngIf="userUpcomingTasks$ | async as userUpcomingTasks">
+          <ng-container *ngFor="let task of userUpcomingTasks">
+            <div class="card-body pt-5">
+              <!-- begin::Item -->
+              <div class="d-flex align-items-center mb-7">
+                <!-- begin::Symbol -->
+                <div class="symbol symbol-50px me-5">
+                  <span class="symbol-label bg-light-success">
+                    <span
+                      [inlineSVG]="
+                        './assets/media/icons/duotune/abstract/abs027.svg'
+                      "
+                      class="svg-icon svg-icon-2x svg-icon-success"
+                    ></span>
+                  </span>
+                </div>
+                <!-- end::Symbol -->
+                <!-- begin::Text -->
+                <div class="d-flex flex-column">
+                  <a
+                    href="#"
+                    class="text-gray-900 text-hover-primary fs-6 fw-bolder"
+                  >
+                    {{ task.title }}
+                  </a>
+                  <span class="text-muted fw-bold"
+                    >Due in {{ formatDate(task.duedt) }} days</span
+                  >
+                </div>
+                <!-- end::Text -->
               </div>
-          </div>
+              <!-- end::Item -->
+            </div>
+          </ng-container>
+        </ng-container>
+        <!-- end::Body -->
       </div>
-      <div class="col-md-4">
-          <div class="alert alert-primary" role="alert">
-              <h4 class="alert-heading">Team Goals</h4>
-              <hr>
-              <div class="list-group">
-                  <button type="button" class="list-group-item list-group-item-action"
-                      [routerLink]="['/goals']">
-                      Yearlyreminder Customer 1
-                      <div>
-                        <span class="badge badge-primary badge-pill">3</span>
-                      </div>
-                  </button>
+    </div>
+    <div class="col-xl-4">
+      <div ngClass="card-xl-stretch mb-xl-8">
+        <!-- begin::Header -->
+        <div class="card-header border-0">
+          <h3 class="card-title fw-bolder text-gray-900">Completed</h3>
+        </div>
+        <!-- end::Header -->
+        <!-- begin::Body -->
+        <ng-container *ngIf="userCompletedTasks$ | async as userCompletedTasks">
+          <ng-container *ngFor="let task of userCompletedTasks">
+            <div class="card-body pt-0">
+              <!-- begin::Item -->
+              <div
+                class="d-flex align-items-center badge-light-success rounded p-5 mb-7"
+              >
+                <!-- begin::Icon -->
+                <span class="svg-icon svg-icon-warning me-5">
+                  <span
+                    [inlineSVG]="
+                      './assets/media/icons/duotune/abstract/abs027.svg'
+                    "
+                    class="svg-icon svg-icon-1"
+                  ></span>
+                </span>
+                <!-- end::Icon -->
+                <!-- begin::Title -->
+                <div class="flex-grow-1 me-2">
+                  <a
+                    href="#"
+                    class="fw-bolder text-gray-800 text-hover-primary fs-6"
+                  >
+                    {{ task.title }}
+                  </a>
+                  <!-- <span class="text-muted fw-bold d-block"
+                    >Due in {{ formatDate(task.duedt) }} days</span
+                  > -->
+                </div>
+                <!-- end::Title -->
+                <span class="badge badge-light-success fs-8 fw-bolder">{{
+                  task.status
+                }}</span>
               </div>
-          </div>
+              <!-- end::Item -->
+            </div>
+          </ng-container>
+        </ng-container>
+        <!-- end::Body -->
       </div>
+    </div>
   </div>
 </div>
