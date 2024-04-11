@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 // import { UserModel } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserModel } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -88,37 +89,37 @@ export class LoginComponent implements OnInit, OnDestroy {
   //   this.unsubscribe.push(loginSubscr);
   // }
 
-// Firebase
-submit() {
-  this.hasError = false;
-  this.loginErrorMessage = '';
-  const loginSubscr = this.authService
-    .loginFirebase(this.f.email.value, this.f.password.value)
-    .pipe(first())
-    .subscribe({
-      next: (user) => {
-        alert('user.emailVerified' + user?.emailVerified);
+  // Firebase
+  submit() {
+    this.hasError = false;
+    this.loginErrorMessage = '';
+    const loginSubscr = this.authService
+      .loginFirebase(this.f.email.value, this.f.password.value)
+      .pipe(first())
+      .subscribe({
+        next: (user) => {
+          alert('user.emailVerified' + user?.emailVerified);
           if (user && user.emailVerified) {
             this.router.navigate([this.returnUrl]);
-          }
-          else if (user && !user.emailVerified) {
+          } else if (user && !user.emailVerified) {
             this.hasError = true;
-            this.loginErrorMessage = 'Please verify your email before logging in.';
-          }
-          else {
+            this.loginErrorMessage =
+              'Please verify your email before logging in.';
+          } else {
             this.hasError = true;
-            this.loginErrorMessage = 'Login failed. Please check your email and password.';
+            this.loginErrorMessage =
+              'Login failed. Please check your email and password.';
           }
-      },
-      error: (err) => {
-        this.hasError = true;
-        console.error(err);
-        alert(`Login failed: ${err.message}`);
-      }
-    });
+        },
+        error: (err) => {
+          this.hasError = true;
+          console.error(err);
+          alert(`Login failed: ${err.message}`);
+        },
+      });
 
-  this.unsubscribe.push(loginSubscr);
-}
+    this.unsubscribe.push(loginSubscr);
+  }
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());

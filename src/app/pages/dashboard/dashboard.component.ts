@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   uid: string;
+  projectId: string;
   username: string;
   userInProgressTasks$: Observable<any[]>;
   userUpcomingTasks$: Observable<any[]>;
@@ -39,13 +40,23 @@ export class DashboardComponent implements OnInit {
       } else {
         this.uid = '';
       }
-      this.getTasks();
+      this.service.getUserDetails(this.uid).then((results) => {
+        this.projectId = results.projectId;
+        console.log(this.projectId);
+        this.getTasks();
+      });
     });
   }
 
   getTasks() {
-    this.userInProgressTasks$ = this.service.getTasks(this.uid, 'In Progress');
-    this.userCompletedTasks$ = this.service.getTasks(this.uid, 'Completed');
+    this.userInProgressTasks$ = this.service.getTasks(
+      this.projectId,
+      'In Progress'
+    );
+    this.userCompletedTasks$ = this.service.getTasks(
+      this.projectId,
+      'Completed'
+    );
     this.cdr.detectChanges();
   }
 
