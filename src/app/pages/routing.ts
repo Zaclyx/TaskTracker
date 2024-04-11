@@ -54,6 +54,11 @@ const Routing: Routes = [
       import('./goals/goals.module').then((m) => m.GoalsModule),
   },
   {
+    path: 'profile',
+    loadChildren: () =>
+      import('./profile/profile.module').then((m) => m.ProfileModule),
+  },
+  {
     path: '',
     redirectTo: '/dashboard',
     pathMatch: 'full',
