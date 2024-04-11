@@ -29,7 +29,7 @@
                 <input
                   type="text"
                   class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                  placeholder="First name"
+                  placeholder="Name"
                   formControlName="name"
                 />
               </div>
@@ -60,7 +60,7 @@
           class="btn btn-primary"
           [disabled]="isLoading || profileForm.invalid"
         >
-          <ng-container *ngIf="!isLoading">Save</ng-container>
+          <ng-container *ngIf="!isLoading">Save Changes</ng-container>
           <ng-container *ngIf="isLoading">
             <span class="indicator-progress">
               Please wait...
