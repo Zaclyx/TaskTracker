@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  <h1 class="display-6">Overview</h1>
+  <h1 class="display-6">Dashboard</h1>
   <p class="lead">
     You can now keep track your tasks in an organised and clean way
   </p>
@@ -14,42 +14,49 @@
         <!-- end::Header -->
         <!-- begin::Body -->
         <ng-container
-          *ngIf="userInProgressTasks$ | async as userInProgressTasks"
+          *ngIf="
+            (userInProgressTasks$ | async)?.length;
+            else emptyInProgressTasks
+          "
         >
-          <ng-container *ngFor="let task of userInProgressTasks">
-            <div class="card-body pt-2">
+          <ng-container *ngFor="let task of userInProgressTasks$ | async">
+            <div class="card-body pt-5">
               <!-- begin::Item -->
-              <div class="d-flex align-items-center mb-8">
-                <!-- begin::Bullet -->
-                <span class="bullet bullet-vertical h-40px bg-primary"></span>
-                <!-- end::Bullet -->
-                <!-- begin::Checkbox -->
-                <div class="form-check form-check-custom form-check-solid mx-5">
-                  <!-- <input class="form-check-input" type="checkbox" value="" /> -->
+              <div class="d-flex align-items-center mb-7">
+                <!-- begin::Symbol -->
+                <div class="symbol symbol-50px me-5">
+                  <span class="symbol-label bg-light-warning">
+                    <span
+                      [inlineSVG]="
+                        './assets/media/icons/duotune/abstract/abs027.svg'
+                      "
+                      class="svg-icon svg-icon-2x svg-icon-warning"
+                    ></span>
+                  </span>
                 </div>
-                <!-- end::Checkbox -->
-                <!-- begin::Description -->
-                <div class="flex-grow-1">
-                  <a
-                    href="#"
-                    class="text-gray-800 text-hover-primary fw-bolder fs-6"
-                  >
+                <!-- end::Symbol -->
+                <!-- begin::Text -->
+                <div class="d-flex flex-column">
+                  <a class="text-gray-900 text-hover-primary fs-6 fw-bolder">
                     {{ task.title }}
                   </a>
-                  <span class="text-muted fw-bold d-block"
+                  <span class="text-muted fw-bold"
                     >Due in {{ formatDate(task.duedt) }} days</span
                   >
+                  <span class="badge badge-light-warning fs-8 fw-bolder">{{
+                    task.status
+                  }}</span>
                 </div>
-                <!-- end::Description -->
-
-                <span class="badge badge-light-warning fs-8 fw-bolder">{{
-                  task.status
-                }}</span>
+                <!-- end:Item -->
               </div>
-              <!-- end:Item -->
             </div>
           </ng-container>
         </ng-container>
+        <ng-template #emptyInProgressTasks>
+          <div class="card-body">
+            <p>No tasks in progress</p>
+          </div>
+        </ng-template>
         <!-- end::Body -->
       </div>
     </div>
@@ -61,8 +68,66 @@
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
-        <ng-container *ngIf="userUpcomingTasks$ | async as userUpcomingTasks">
-          <ng-container *ngFor="let task of userUpcomingTasks">
+        <ng-container
+          *ngIf="(userOverdueTasks$ | async)?.length; else emptyOverdueTasks"
+        >
+          <ng-container *ngFor="let task of userOverdueTasks$ | async">
+            <div class="card-body pt-5">
+              <!-- begin::Item -->
+              <div class="d-flex align-items-center mb-7">
+                <!-- begin::Symbol -->
+                <div class="symbol symbol-50px me-5">
+                  <span class="symbol-label bg-light-danger">
+                    <span
+                      [inlineSVG]="
+                        './assets/media/icons/duotune/abstract/abs027.svg'
+                      "
+                      class="svg-icon svg-icon-2x svg-icon-danger"
+                    ></span>
+                  </span>
+                </div>
+                <!-- end::Symbol -->
+                <!-- begin::Text -->
+                <div class="d-flex flex-column">
+                  <a class="text-gray-900 text-hover-primary fs-6 fw-bolder">
+                    {{ task.title }}
+                  </a>
+                  <span class="text-muted fw-bold"
+                    >{{ formatOverdueDate(task.duedt) }} days
+                  </span>
+                  <span class="badge badge-light-danger fs-8 fw-bolder">{{
+                    task.status
+                  }}</span>
+                </div>
+                <!-- end::Text -->
+              </div>
+              <!-- end::Item -->
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #emptyOverdueTasks>
+          <div class="card-body">
+            <p>No overdue tasks</p>
+          </div>
+        </ng-template>
+        <!-- end::Body -->
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div ngClass="card-xl-stretch mb-xl-8">
+        <!-- begin::Header -->
+        <div class="card-header border-0">
+          <h3 class="card-title fw-bolder text-gray-900">Completed</h3>
+        </div>
+        <!-- end::Header -->
+        <!-- begin::Body -->
+        <ng-container
+          *ngIf="
+            (userCompletedTasks$ | async)?.length;
+            else emptyCompletedTasks
+          "
+        >
+          <ng-container *ngFor="let task of userCompletedTasks$ | async">
             <div class="card-body pt-5">
               <!-- begin::Item -->
               <div class="d-flex align-items-center mb-7">
@@ -80,71 +145,23 @@
                 <!-- end::Symbol -->
                 <!-- begin::Text -->
                 <div class="d-flex flex-column">
-                  <a
-                    href="#"
-                    class="text-gray-900 text-hover-primary fs-6 fw-bolder"
-                  >
+                  <a class="text-gray-900 text-hover-primary fs-6 fw-bolder">
                     {{ task.title }}
                   </a>
-                  <span class="text-muted fw-bold"
-                    >Due in {{ formatDate(task.duedt) }} days</span
-                  >
+                  <span class="badge badge-light-success fs-8 fw-bolder">{{
+                    task.status
+                  }}</span>
                 </div>
-                <!-- end::Text -->
+                <!-- end:Item -->
               </div>
-              <!-- end::Item -->
             </div>
           </ng-container>
         </ng-container>
-        <!-- end::Body -->
-      </div>
-    </div>
-    <div class="col-xl-4">
-      <div ngClass="card-xl-stretch mb-xl-8">
-        <!-- begin::Header -->
-        <div class="card-header border-0">
-          <h3 class="card-title fw-bolder text-gray-900">Completed</h3>
-        </div>
-        <!-- end::Header -->
-        <!-- begin::Body -->
-        <ng-container *ngIf="userCompletedTasks$ | async as userCompletedTasks">
-          <ng-container *ngFor="let task of userCompletedTasks">
-            <div class="card-body pt-0">
-              <!-- begin::Item -->
-              <div
-                class="d-flex align-items-center badge-light-success rounded p-5 mb-7"
-              >
-                <!-- begin::Icon -->
-                <span class="svg-icon svg-icon-warning me-5">
-                  <span
-                    [inlineSVG]="
-                      './assets/media/icons/duotune/abstract/abs027.svg'
-                    "
-                    class="svg-icon svg-icon-1"
-                  ></span>
-                </span>
-                <!-- end::Icon -->
-                <!-- begin::Title -->
-                <div class="flex-grow-1 me-2">
-                  <a
-                    href="#"
-                    class="fw-bolder text-gray-800 text-hover-primary fs-6"
-                  >
-                    {{ task.title }}
-                  </a>
-                  <!-- <span class="text-muted fw-bold d-block"
-                    >Due in {{ formatDate(task.duedt) }} days</span
-                  > -->
-                </div>
-                <!-- end::Title -->
-                <span class="badge badge-light-success fs-8 fw-bolder">{{
-                  task.status
-                }}</span>
-              </div>
-              <!-- end::Item -->
-            </div>
-          </ng-container>
-        </ng-container>
+        <ng-template #emptyCompletedTasks>
+          <div class="card-body">
+            <p>No completed tasks</p>
+          </div>
+        </ng-template>
         <!-- end::Body -->
       </div>
     </div>

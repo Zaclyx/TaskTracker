@@ -15,6 +15,7 @@ export class ProfileComponent {
   userId: string;
   userName: any;
   projectId: any;
+  name: any;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -29,12 +30,29 @@ export class ProfileComponent {
   }
 
   ngOnInit(): void {
-    this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      projectId: ['', Validators.required],
+    this.getuid();
+  }
+
+  async getuid() {
+    this.auth.authState.subscribe((user) => {
+      if (user) {
+        this.userId = user.uid || '';
+      } else {
+        this.userId = '';
+      }
+      this.service.getUserDetails(this.userId).then((results) => {
+        this.projectId = results.projectId || '';
+        this.name = results.name || '';
+        this.initForm();
+      });
     });
-    this.auth.authState.subscribe(async (user) => {
-      this.userId = user!.uid;
+    this.initForm();
+  }
+
+  initForm() {
+    this.profileForm = this.fb.group({
+      name: [this.name, Validators.required],
+      projectId: [this.projectId, Validators.required],
     });
   }
 

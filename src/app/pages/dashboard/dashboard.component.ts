@@ -26,10 +26,11 @@ export class DashboardComponent implements OnInit {
   projectId: string;
   username: string;
   userInProgressTasks$: Observable<any[]>;
-  userUpcomingTasks$: Observable<any[]>;
+  userOverdueTasks$: Observable<any[]>;
   userCompletedTasks$: Observable<any[]>;
 
   ngOnInit(): void {
+    this.service.checkAndUpdateDueDates();
     this.getUid();
   }
 
@@ -42,7 +43,6 @@ export class DashboardComponent implements OnInit {
       }
       this.service.getUserDetails(this.uid).then((results) => {
         this.projectId = results.projectId;
-        console.log(this.projectId);
         this.getTasks();
       });
     });
@@ -57,6 +57,7 @@ export class DashboardComponent implements OnInit {
       this.projectId,
       'Completed'
     );
+    this.userOverdueTasks$ = this.service.getTasks(this.projectId, 'Overdue');
     this.cdr.detectChanges();
   }
 
@@ -74,10 +75,27 @@ export class DashboardComponent implements OnInit {
       differenceInDays = Math.floor(
         differenceInMilliseconds / (1000 * 60 * 60 * 24)
       );
-
-      console.log('Difference in days:', differenceInDays);
-
       return differenceInDays;
+    } else {
+      return differenceInDays;
+    }
+  }
+
+  formatOverdueDate(duedt: ITimestamp): number {
+    let differenceInDays = 0;
+
+    if (duedt.seconds) {
+      const milliseconds = duedt.seconds * 1000;
+      const providedDate = new Date(milliseconds);
+      const currentDate = new Date();
+
+      const differenceInMilliseconds =
+        providedDate.getTime() - currentDate.getTime();
+
+      differenceInDays = Math.floor(
+        differenceInMilliseconds / (1000 * 60 * 60 * 24)
+      );
+      return -differenceInDays;
     } else {
       return differenceInDays;
     }
