@@ -84,6 +84,14 @@ export class SharedService {
       })
     );
   }
+
+  async profileUpdate(userId: string, value: any) {
+    const q = query(collection(this.fs, 'users'), where('uid', '==', userId));
+    const snapshot = await getDocs(q);
+    const snapshotDocId = snapshot.docs[0].id;
+    const docRef = doc(this.fs, 'users', snapshotDocId);
+    setDoc(docRef, value, { merge: true });
+  }
 }
 //   createReminder(ReminderInterfaceDTO: any) {
 //     let remindersDataCollection = collection(this.fs, 'reminders');
