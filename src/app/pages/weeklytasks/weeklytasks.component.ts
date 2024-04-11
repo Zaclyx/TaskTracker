@@ -1,15 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Firestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from '@angular/fire/firestore';
+import { Component } from '@angular/core';
+import { Firestore, collection, doc, getDocs, deleteDoc, updateDoc, query, where } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ChangeDetectorRef } from '@angular/core';
-import { get } from 'jquery';
+import { Router } from '@angular/router';
+import { SharedService } from 'src/app/shared.service';
 
 
 @Component({
   selector: 'app-vertical',
   templateUrl: './weeklytasks.component.html',
 })
-export class WeeklyTaskComponent{
+export class WeeklyTasksComponent{
   public userId: string;
   public userName: string;
   public projectId: string;
@@ -17,8 +18,9 @@ export class WeeklyTaskComponent{
   public weeklyTasks: {[key: string]: {tasks: {id: string, title: string, description: string, status: string}[]}} = {};
   public currentWeek: number = this.getCurrentWeek(new Date());
   public currentYear: number = new Date().getFullYear();
+  public years: number[] = Array.from({length: 10}, (v, k) => k + this.currentYear - 5);
 
-  constructor(private firestore: Firestore, private auth: AngularFireAuth, private cdr: ChangeDetectorRef) {}
+  constructor(private firestore: Firestore, private auth: AngularFireAuth, private router: Router, private cdr: ChangeDetectorRef, private sharedService: SharedService) {}
 
   ngOnInit() {
     this.auth.authState.subscribe(async (user) => {
@@ -40,14 +42,10 @@ export class WeeklyTaskComponent{
   async getWeeklyTasks() {
     const q = query(collection(this.firestore, 'tasks'));
     const snapshot = await getDocs(q);
-    snapshot.docs.filter(doc => this.getCurrentWeek(doc.data().createddt.toDate()) === this.currentWeek && doc.data().projectId === this.projectId).map(doc => {
+    snapshot.docs.filter(doc => this.getCurrentWeek(doc.data().duedt.toDate()) === this.currentWeek && doc.data().duedt.toDate().getFullYear() === this.currentYear && doc.data().projectId === this.projectId).map(doc => {
       if (!this.weeklyTasks[doc.data().userName]) this.weeklyTasks[doc.data().userName] = {tasks: []};
       this.weeklyTasks[doc.data().userName].tasks.push({ id: doc.id, title: doc.data().title, description: doc.data().description, status: doc.data().status, ...doc.data() });
     });
-    // this.weeklyTasks = snapshot.docs.filter(doc => this.getCurrentWeek(doc.data().createddt.toDate()) === this.currentWeek).map(doc => {
-    //   if (!this.weeklyTasksAuthor.includes(doc.data().userName)) this.weeklyTasksAuthor.push(doc.data().userName);
-    //   return { ...doc.data() };
-    // });
     this.weeklyTasksAuthor = Object.keys(this.weeklyTasks);
     this.cdr.detectChanges();
   }
@@ -74,7 +72,7 @@ export class WeeklyTaskComponent{
     if (foundTask) {
       foundTask.status = "Completed";
       this.cdr.detectChanges();
-      alert("Task marked as complete successfully");
+      alert("Task marked as 'Complete' successfully");
     }
   }
 
@@ -87,37 +85,53 @@ export class WeeklyTaskComponent{
     return (currentDate < nextMonday) ? 52 : (currentDate > nextMonday ? Math.ceil((currentDate.valueOf() - nextMonday.valueOf()) / (24 * 3600 * 1000) / 7) : 1);
   }
 
-  addWeeklyTask() {
-    // Add a new document with a generated id.
-    const docRef = collection(this.firestore, 'tasks');
-    const payload = {
-      userId: this.userId,
-      userName: this.userName,
-      title: 'Finish Documentation',
-      description: 'Test description',
-      status: 'In Progress',
-      projectId: this.projectId,
-      duedt: new Date(2024, 11, 27, 10, 30, 0), // Due on 27th December 2024, 10:30 AM
-      createddt: new Date(),
-      updateddt: new Date()
-    };
-    addDoc(docRef, payload).then((result: any) => {
-      alert("Task added successfully");
-      this.weeklyTasks[this.userName].tasks.push({ id: result._key.path.segments[1], ...payload })
-      this.cdr.detectChanges();
-    });
+  onYearChange(event: any) {
+    this.clear();
+    this.currentYear = parseInt(event.target.value);
+    this.getWeeklyTasks();
   }
 
+  navigateToEditTask(task: any) {
+    task.page = 'weekly';
+    this.sharedService.setCurrentTask(task);
+    this.router.navigate(['/edittask']);
+  }
+
+  // addTask() {
+  //   // Add a new document with a generated id.
+  //   const docRef = collection(this.firestore, 'tasks');
+  //   const payload = {
+  //     userId: this.userId,
+  //     userName: this.userName,
+  //     title: 'Finish Documentation',
+  //     description: 'Test description',
+  //     status: 'In Progress',
+  //     projectId: this.projectId,
+  //     duedt: new Date(2024, 11, 27, 10, 30, 0), // Due on 27th December 2024, 10:30 AM
+  //     createddt: new Date(),
+  //     updateddt: new Date()
+  //   };
+  //   addDoc(docRef, payload).then((result: any) => {
+  //     alert("Task added successfully");
+  //     this.weeklyTasks[this.userName].tasks.push({ id: result._key.path.segments[1], ...payload })
+  //     this.cdr.detectChanges();
+  //   });
+  // }
+
   next() {
-    this.clear();
-    this.currentWeek < 52 ? this.currentWeek++ : 52;
-    this.getWeeklyTasks();
+    if (this.currentWeek < 52) {
+      this.clear();
+      this.currentWeek++;
+      this.getWeeklyTasks();
+    }
   }
 
   previous() {
-    this.clear()
-    this.currentWeek > 1 ? this.currentWeek-- : 1;
-    this.getWeeklyTasks();
+    if (this.currentWeek > 1) {
+      this.clear();
+      this.currentWeek--;
+      this.getWeeklyTasks();
+    }
   }
 
   clear() {

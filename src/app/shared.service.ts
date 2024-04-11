@@ -15,12 +15,15 @@ import {
   setDoc,
   where,
 } from '@angular/fire/firestore';
-import { Observable, from, interval, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, from, interval, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
+  private currentTask = new BehaviorSubject<any>(null);
+  currentTask$ = this.currentTask.asObservable();
+
   constructor(private fs: Firestore) {}
 
   // Users Firestore Methods
@@ -50,6 +53,10 @@ export class SharedService {
       );
     }
     return collectionData(q, { idField: 'id' });
+  }
+
+  setCurrentTask(task: any) {
+    this.currentTask.next(task);
   }
 
   checkAndUpdateDueDates(): Observable<any> {
