@@ -1,79 +1,97 @@
-<div class="page-container">
-    <h1>Add Task</h1>
-    <form class="form w-100" novalidate="novalidate" id="" (ngSubmit)="submit()" [formGroup]="taskForm">
-          <!--begin::Form group-->
-      <div class="fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900 fs-6">Title</label>
-        <input class="form-control bg-transparent" type="text" name="title" formControlName="title"
-          placeholder="Title" autocomplete="off"/>
+
+<div class="page-container"> 
+  <h1>Add Task</h1>
+  <form class="form w-100" novalidate="novalidate" id="" (ngSubmit)="submit()" [formGroup]="taskForm">
+        <!--begin::Form group-->
+    <div class="fv-row mb-8">
+      <label class="form-label fw-bolder text-gray-900 fs-6">Title</label>
+      <input class="form-control bg-transparent" type="text" name="title" formControlName="title"
+        placeholder="Title" autocomplete="off"/>
+      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          validation: 'required',
+          message: 'Title is required',
+          control: taskForm.controls['title']
+        }"></ng-container>
+    </div>
+
+    <div class="fv-row mb-8">
+      <label class="form-label fw-bolder text-gray-900 fs-6">Description</label>
+      <textarea class="form-control bg-transparent" type="text" name="description" formControlName="description"
+        placeholder="Description" autocomplete="off"></textarea>
+      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          validation: 'required',
+          message: 'description is required',
+          control: taskForm.controls['description']
+        }"></ng-container>
+    </div>
+    <!-- <div class="fv-row mb-8">
+      <label class="form-label fw-bolder text-gray-900 fs-6">Status</label>
+      <select class="form-control bg-transparent" type="text" name="status" formControlName="status"
+        placeholder="Status" autocomplete="off">
+        <option value="inprogress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+          validation: 'required',
+          message: 'status is required',
+          control: taskForm.controls['status']
+        }"></ng-container>
+    </div>
+    <div class="fv-row mb-8">
+      <label class="form-label fw-bolder text-gray-900 fs-6">Due Date</label>
+      <div>
+        <mat-form-field>
+          <mat-label>Due Date</mat-label>
+          <input matInput [matDatepicker]="picker">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
         <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: 'Title is required',
-            control: taskForm.controls['title']
-          }"></ng-container>
+                  validation: 'required',
+                  message: 'duedt is required',
+                  control: taskForm.controls['duedt']
+                }"></ng-container>
       </div>
- 
-      <div class="fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900 fs-6">Description</label>
-        <textarea class="form-control bg-transparent" type="text" name="description" formControlName="description"
-          placeholder="Description" autocomplete="off"></textarea>
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: 'description is required',
-            control: taskForm.controls['description']
-          }"></ng-container>
-      </div>
-      <div class="row mb-8">
-        <div class="col-md-6">
-            <div class="fv-row">
-                <label class="form-label fw-bolder text-gray-900 fs-6">Status</label>
-                <select class="form-control bg-transparent" type="text" name="status" formControlName="status"
-                    placeholder="Status" autocomplete="off">
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                </select>
-                <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                            validation: 'required',
-                            message: 'status is required',
-                            control: taskForm.controls['status']
-                        }"></ng-container>
-            </div>
-        </div>
-        <!-- <div class="col-md-6">
+    </div> -->
+    <div class="row mb-8">
+      <div class="col-md-6">
           <div class="fv-row">
-            <label class="form-label fw-bolder text-gray-900 fs-6">Due Date</label>
+              <label class="form-label fw-bolder text-gray-900 fs-6">Status</label>
+              <select class="form-control bg-transparent" type="text" name="status" formControlName="status"
+                  placeholder="Status" autocomplete="off">
+                  <option value="inprogress">In Progress</option>
+                  <option value="completed">Completed</option>
+              </select>
+              <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+                          validation: 'required',
+                          message: 'status is required',
+                          control: taskForm.controls['status']
+                      }"></ng-container>
+          </div>
+      </div>
+      <div class="col-md-6">
+        <div class="fv-row">
+          <label class="form-label fw-bolder text-gray-900 fs-6">Due Date</label>
+            <div>
               <mat-form-field>
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker">
+                <mat-label>Due Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="duedt">
                 <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
               <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                          validation: 'required',
-                          message: 'duedate is required',
-                          control: taskForm.controls['duedt']
-                      }"></ng-container>
+                  validation: 'required',
+                  message: 'duedt is required',
+                  control: taskForm.controls['duedt']
+              }"></ng-container>
           </div>
-      </div> -->
-        <!-- <div class="col-md-6">
-          <div class="fv-row"> -->
-            <!-- <label class="form-label fw-bolder text-gray-900 fs-6">Due Date</label>
-            <mat-form-field class="example-full-width">
-              <mat-label>Choose a date</mat-label>
-              <input matInput [matDatepicker]="picker">
-              <mat-hint>MM/DD/YYYY</mat-hint>
-              <mat-datepicker-toggle matIconSuffix [for]="picker">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field> -->
-          <!-- </div>
-        </div> -->
+        </div>
       </div>
-    <div class="page-container">
-      <button class="btn btn-primary mb-3" type="submit">Add Task</button>
-    </div>
-    </form>
   </div>
-
+  <div class="page-container">
+    <button class="btn btn-primary mb-3">Add Task</button>
+  </div>
+  </form>
+</div>
