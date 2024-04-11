@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  <h1 class="display-6">Overview</h1>
+  <h1 class="display-6">Dashboard</h1>
   <p class="lead">
     You can now keep track your tasks in an organised and clean way
   </p>
@@ -31,8 +31,9 @@
                 <!-- begin::Description -->
                 <div class="flex-grow-1">
                   <a
-                    href="#"
+                    (click)="navigateToWeeklyTask(task)"
                     class="text-gray-800 text-hover-primary fw-bolder fs-6"
+                    style="cursor: pointer;"
                   >
                     {{ task.title }}
                   </a>
@@ -81,8 +82,9 @@
                 <!-- begin::Text -->
                 <div class="d-flex flex-column">
                   <a
-                    href="#"
+                    (click)="navigateToWeeklyTask(task)"
                     class="text-gray-900 text-hover-primary fs-6 fw-bolder"
+                    style="cursor: pointer;"
                   >
                     {{ task.title }}
                   </a>
@@ -127,8 +129,9 @@
                 <!-- begin::Title -->
                 <div class="flex-grow-1 me-2">
                   <a
-                    href="#"
+                    (click)="navigateToWeeklyTask(task)"
                     class="fw-bolder text-gray-800 text-hover-primary fs-6"
+                    style="cursor: pointer;"
                   >
                     {{ task.title }}
                   </a>
