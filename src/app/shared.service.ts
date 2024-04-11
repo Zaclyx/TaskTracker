@@ -29,14 +29,20 @@ export class SharedService {
     return addDoc(usersCollection, user);
   }
 
-  getTasks(userId: string, status: string) {
+  async getUserDetails(userId: string) {
+    const q = query(collection(this.fs, 'users'), where('uid', '==', userId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs[0].data();
+  }
+
+  getTasks(projectId: string, status: string) {
     let tasksCollection = collection(this.fs, 'tasks');
     let q;
     const currentTimeStamp = Timestamp.now();
     if (status == 'In Progress') {
       q = query(
         tasksCollection,
-        where('userId', '==', userId),
+        where('projectId', '==', projectId),
         where('status', '==', status),
         where('duedt', '>', currentTimeStamp),
         orderBy('duedt')
@@ -44,7 +50,7 @@ export class SharedService {
     } else {
       q = query(
         tasksCollection,
-        where('userId', '==', userId),
+        where('projectId', '==', projectId),
         where('status', '==', status),
         orderBy('duedt')
       );
