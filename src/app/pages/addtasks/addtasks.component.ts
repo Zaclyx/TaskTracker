@@ -77,12 +77,12 @@ export class AddTasksComponent{
                 Validators.required,
               ]),
             ],
-            // duedt: [
-            //   "",
-            //   Validators.compose([
-            //     Validators.required,
-            //   ]),
-            // ],
+            duedt: [
+              "",
+              Validators.compose([
+                Validators.required,
+              ]),
+            ],
             agree: [false, Validators.compose([Validators.required])],
           },
           {
@@ -96,7 +96,7 @@ export class AddTasksComponent{
     if (this.taskForm.valid) {
       const docRef = collection(this.firestore, 'tasks');
       const formValue = this.taskForm.value;
-      // const duedt = formValue.duedt ? new Date(formValue.duedt) : new Date();
+      const duedt = formValue.duedt ? new Date(formValue.duedt) : new Date();
       const payload = {
           userId: this.userId,
           userName: this.userName,
@@ -104,7 +104,7 @@ export class AddTasksComponent{
           description: formValue.description,
           status: formValue.status,
           projectId: this.projectId,
-          // duedt: duedt, // Due on 27th December 2024, 10:30 AM
+          duedt: duedt, // Due on 27th December 2024, 10:30 AM
           createddt: new Date(),
           updateddt: new Date()
       };
