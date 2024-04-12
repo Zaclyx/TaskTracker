@@ -16,6 +16,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, from, interval, switchMap } from 'rxjs';
+import { AuthService } from './modules/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class SharedService {
   private currentTask = new BehaviorSubject<any>(null);
   currentTask$ = this.currentTask.asObservable();
 
-  constructor(private fs: Firestore) {}
+  constructor(private fs: Firestore, private auth: AuthService) {}
 
   // Users Firestore Methods
   addUser(user: any) {
@@ -35,7 +36,20 @@ export class SharedService {
   async getUserDetails(userId: string) {
     const q = query(collection(this.fs, 'users'), where('uid', '==', userId));
     const snapshot = await getDocs(q);
-    return snapshot.docs[0].data();
+    const userResult = snapshot.docs[0].data();
+
+    const q2 = query(collection(this.fs, 'projects'), where('projectId', '==', userResult.projectId));
+    const snapshot2 = await getDocs(q2);
+    const projectResult = snapshot2.docs[0].data();
+
+    return [userResult, projectResult];
+  }
+
+  async getProjectDetails(projectId: string) {
+    const q = query(collection(this.fs, 'projects'), where('projectId', '==', projectId));
+    const snapshot = await getDocs(q);
+    if (snapshot.docs.length == 0) return null
+    else return snapshot.docs[0].data();
   }
 
   getTasks(projectId: string, status: string) {
@@ -92,12 +106,39 @@ export class SharedService {
     );
   }
 
-  async profileUpdate(userId: string, value: any) {
+  async updateLastLogin(userId: string) {
     const q = query(collection(this.fs, 'users'), where('uid', '==', userId));
     const snapshot = await getDocs(q);
     const snapshotDocId = snapshot.docs[0].id;
     const docRef = doc(this.fs, 'users', snapshotDocId);
-    setDoc(docRef, value, { merge: true });
+    setDoc(docRef, { lastLogin: Timestamp.now() }, { merge: true }).then(() => {
+      this.auth.logout();
+      document.location.reload();
+    });
+  }
+
+  async profileUpdate(userId: string, projectExist: boolean, value: any) {
+    const q = query(collection(this.fs, 'users'), where('uid', '==', userId));
+    const snapshot = await getDocs(q);
+    const snapshotDocId = snapshot.docs[0].id;
+    const docRef = doc(this.fs, 'users', snapshotDocId);
+    setDoc(docRef, {name: value.name, projectId: value.projectId }, { merge: true });
+
+    const q2 = query(collection(this.fs, 'tasks'), where('userId', '==', userId));
+    const snapshot2 = await getDocs(q2);
+    snapshot2.forEach((task) => {
+      const docRef2 = doc(this.fs, 'tasks', task.id);
+      setDoc(docRef2, { userName: value.name }, { merge: true });
+    });
+
+    if (!projectExist) {
+      const q3 = collection(this.fs, 'projects');
+      const payload = {
+        projectId: value.projectId,
+        projectName: value.projectName,
+      };
+      addDoc(q3, payload);
+    }
   }
 }
 //   createReminder(ReminderInterfaceDTO: any) {

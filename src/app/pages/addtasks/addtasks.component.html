@@ -1,64 +1,76 @@
-<div class="page-container">
-    <h1>Add Task</h1>
+<div class="card mb-6 mb-xl-10"> 
+  <h1 class="fw-bolder m-0" style="padding: 5px; padding-bottom: 20px;">Add Task</h1>
     <form class="form w-100" novalidate="novalidate" id="" (ngSubmit)="submit()" [formGroup]="taskForm">
           <!--begin::Form group-->
       <div class="fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900 fs-6">Title</label>
+        <label class="form-label fw-bolder required text-gray-900 fs-6">Title</label>
         <input class="form-control bg-transparent" type="text" name="title" formControlName="title"
-          placeholder="Title" autocomplete="off"/>
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: 'Title is required',
-            control: taskForm.controls['title']
-          }"></ng-container>
+          placeholder="Title" autocomplete="off" [ngClass]="{
+            'is-invalid': taskForm.controls['title'].invalid && taskForm.get('title')?.touched,
+            'is-valid': taskForm.controls['title'].valid && taskForm.get('title')?.touched
+          }"/>
+          <ng-container *ngIf="taskForm.controls['title'].invalid && taskForm.get('title')?.touched">
+            <div class="invalid-feedback">
+              Title is required
+            </div>
+          </ng-container>
       </div>
  
       <div class="fv-row mb-8">
-        <label class="form-label fw-bolder text-gray-900 fs-6">Description</label>
+        <label class="form-label fw-bolder required text-gray-900 fs-6">Description</label>
         <textarea class="form-control bg-transparent" type="text" name="description" formControlName="description"
-          placeholder="Description" autocomplete="off"></textarea>
-        <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-            validation: 'required',
-            message: 'description is required',
-            control: taskForm.controls['description']
-          }"></ng-container>
+          placeholder="Description" autocomplete="off" [ngClass]="{
+            'is-invalid': taskForm.controls['description'].invalid && taskForm.get('description')?.touched,
+            'is-valid': taskForm.controls['description'].valid && taskForm.get('description')?.touched
+          }"></textarea>
+        <ng-container *ngIf="taskForm.controls['description'].invalid && taskForm.get('description')?.touched">
+          <div class="invalid-feedback">
+            Description is required
+          </div>
+        </ng-container>
       </div>
       <div class="row mb-8">
         <div class="col-md-6">
             <div class="fv-row">
-                <label class="form-label fw-bolder text-gray-900 fs-6">Status</label>
+                <label class="form-label fw-bolder required text-gray-900 fs-6">Status</label>
                 <select class="form-control bg-transparent" type="text" name="status" formControlName="status"
-                    placeholder="Status" autocomplete="off">
+                    placeholder="Status" autocomplete="off" [ngClass]="{
+                      'is-invalid': taskForm.controls['status'].invalid && taskForm.get('status')?.touched,
+                      'is-valid': taskForm.controls['status'].valid && taskForm.get('status')?.touched
+                    }">
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
                 </select>
-                <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                            validation: 'required',
-                            message: 'status is required',
-                            control: taskForm.controls['status']
-                        }"></ng-container>
+                <ng-container *ngIf="taskForm.controls['status'].invalid && taskForm.controls['status']?.touched">
+                  <div class="invalid-feedback">
+                    Status is required
+                  </div>
+                </ng-container>
             </div>
         </div>
-        <div class="fv-row mb-8">
-          <label class="form-label fw-bolder text-gray-900 fs-6">Due Date</label>
+        <div class="col-md-6">
+          <label class="form-label fw-bolder required text-gray-900 fs-6">Due Date</label>
           <div>
             <mat-form-field>
               <mat-label class="mt-5">Choose a date</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="duedt">
+              <input matInput [matDatepicker]="picker" formControlName="duedt" [ngClass]="{
+                'is-invalid': taskForm.controls['duedt'].invalid && taskForm.get('duedt')?.touched,
+                'is-valid': taskForm.controls['duedt'].valid && taskForm.get('duedt')?.touched
+              }">
               <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+              <ng-container *ngIf="taskForm.controls['duedt'].invalid && taskForm.controls['duedt']?.touched">
+                <div class="invalid-feedback">
+                  Due Date is required
+                </div>
+              </ng-container>
             </mat-form-field>
-            <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-                validation: 'required',
-                message: 'DueDate is required',
-                control: taskForm.controls['duedt']
-              }"></ng-container>
           </div>
         </div>
       </div>
-    <div class="page-container">
-      <button class="btn btn-primary mb-3" type="submit">Add Task</button>
+    <div class="page-container text-end" style="padding-right: 20px;">
+      <button [disabled]="taskForm.invalid" class="btn btn-primary mb-3" type="submit">Add Task</button>
     </div>
     </form>
   </div>

@@ -1,7 +1,7 @@
 <div class="jumbotron">
-  <h1 class="display-6">Dashboard</h1>
+  <h1 class="card-title fw-bolder text-gray-900">Dashboard</h1>
   <p class="lead">
-    You can now keep track your tasks in an organised and clean way
+    Provide an overview of all the tasks in an organised and clean way
   </p>
   <hr class="my-4" />
   <div class="row g-5 g-xl-8">
@@ -9,7 +9,7 @@
       <div ngClass="card-xl-stretch mb-xl-8">
         <!-- begin::Header -->
         <div class="card-header border-0">
-          <h3 class="card-title fw-bolder text-gray-900">In Progress</h3>
+          <h2 class="card-title fw-bolder text-gray-900">In Progress</h2>
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
@@ -36,7 +36,7 @@
                 </div>
                 <!-- end::Checkbox -->
                 <!-- begin::Description -->
-                <div class="flex-grow-1">
+                <div class="d-flex flex-column">
                   <a
                     (click)="navigateToWeeklyTask(task)"
                     class="text-gray-800 text-hover-primary fw-bolder fs-6"
@@ -45,7 +45,7 @@
                     {{ task.title }}
                   </a>
                   <span class="text-muted fw-bold"
-                    >Due in {{ formatDate(task.duedt) }} days</span
+                    >Due In: {{ formatDate(task.duedt) }} days</span
                   >
                   <span class="badge badge-light-warning fs-8 fw-bolder">{{
                     task.status
@@ -68,7 +68,7 @@
       <div ngClass="card-xl-stretch mb-xl-8">
         <!-- begin::Header -->
         <div class="card-header border-0">
-          <h3 class="card-title fw-bolder text-gray-900">Overdue</h3>
+          <h2 class="card-title fw-bolder text-gray-900">Overdue</h2>
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
@@ -101,7 +101,7 @@
                     {{ task.title }}
                   </a>
                   <span class="text-muted fw-bold"
-                    >{{ formatOverdueDate(task.duedt) }} days
+                    >Overdue By: {{ formatOverdueDate(task.duedt) }} days
                   </span>
                   <span class="badge badge-light-danger fs-8 fw-bolder">{{
                     task.status
@@ -125,7 +125,7 @@
       <div ngClass="card-xl-stretch mb-xl-8">
         <!-- begin::Header -->
         <div class="card-header border-0">
-          <h3 class="card-title fw-bolder text-gray-900">Completed</h3>
+          <h2 class="card-title fw-bolder text-gray-900">Completed</h2>
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
@@ -138,21 +138,21 @@
           <ng-container *ngFor="let task of userCompletedTasks$ | async">
             <div class="card-body pt-5">
               <!-- begin::Item -->
-              <div
-                class="d-flex align-items-center badge-light-success rounded p-5 mb-7"
-              >
+              <div class="d-flex align-items-center mb-7">
                 <!-- begin::Icon -->
-                <span class="svg-icon svg-icon-warning me-5">
-                  <span
-                    [inlineSVG]="
-                      './assets/media/icons/duotune/abstract/abs027.svg'
-                    "
-                    class="svg-icon svg-icon-1"
-                  ></span>
-                </span>
+                <div class="symbol symbol-50px me-5">
+                  <span class="symbol-label" style="background-color:rgba(200, 255, 213, 0.596);">
+                    <span
+                      [inlineSVG]="
+                        './assets/media/icons/duotune/abstract/abs027.svg'
+                      "
+                      class="svg-icon svg-icon-2x svg-icon-success"
+                    ></span>
+                  </span>
+                </div>
                 <!-- end::Icon -->
                 <!-- begin::Title -->
-                <div class="flex-grow-1 me-2">
+                <div class="d-flex flex-column">
                   <a
                     (click)="navigateToWeeklyTask(task)"
                     class="fw-bolder text-gray-800 text-hover-primary fs-6"
