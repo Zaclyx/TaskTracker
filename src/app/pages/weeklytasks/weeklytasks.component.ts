@@ -24,8 +24,7 @@ export class WeeklyTasksComponent{
 
   ngOnInit() {
     this.sharedService.currentTask$.subscribe((task: any) => {
-      const currentTask = task;
-      this.currentWeek = this.getCurrentWeek(currentTask.duedt.toDate());
+      task && (this.currentWeek = this.getCurrentWeek(task.duedt.toDate()));
     });
     this.auth.authState.subscribe(async (user) => {
       this.userId = user!.uid;

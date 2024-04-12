@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserModel } from '../../models/user.model';
+import { SharedService } from 'src/app/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -15,8 +16,8 @@ import { UserModel } from '../../models/user.model';
 export class LoginComponent implements OnInit, OnDestroy {
   // KeenThemes mock, change it to:
   defaultAuth: any = {
-    email: 'admin@demo.com',
-    password: 'demo',
+    email: 'youremail@gmail.com',
+    password: 'password',
   };
   loginForm: FormGroup;
   hasError: boolean;
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private service: SharedService
   ) {
     this.isLoading$ = this.authService.isLoading$;
     // redirect to home if already logged in
@@ -98,7 +100,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe({
         next: (user) => {
-          alert('user.emailVerified' + user?.emailVerified);
           if (user && user.emailVerified) {
             this.router.navigate([this.returnUrl]);
           } else if (user && !user.emailVerified) {

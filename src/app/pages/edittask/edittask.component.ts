@@ -1,10 +1,8 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import 'firebase/database';
-import { ConfirmPasswordValidator } from 'src/app/modules/auth';
 import { SharedService } from 'src/app/shared.service';
 
 
@@ -17,7 +15,6 @@ export class EditTaskComponent{
     taskForm: FormGroup;
     tasks: any;
     public currentTask: any;
-    formError: TemplateRef<{ validation: string; message: string; control: AbstractControl<any,any>; }>|null;
     constructor(
       private fb: FormBuilder,
       private router: Router,
@@ -63,12 +60,8 @@ export class EditTaskComponent{
           Validators.compose([
             Validators.required,
           ]),
-        ],
-        agree: [false, Validators.compose([Validators.required])],
+        ]
       },
-      {
-        validator: ConfirmPasswordValidator.MatchPassword,
-      }
     );
   }
 

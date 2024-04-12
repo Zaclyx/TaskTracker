@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { Firestore, collection, doc, getDocs, addDoc, deleteDoc, updateDoc, query, where } from '@angular/fire/firestore';
+import { Component } from '@angular/core';
+import { Firestore, collection, getDocs, addDoc, query, where } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ChangeDetectorRef } from '@angular/core';
-import { get } from 'jquery';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -24,7 +23,6 @@ export class AddTasksComponent{
     public projectId: string;
     public weeklyTasksAuthor: any[] = [];
     public weeklyTasks: {[key: string]: {tasks: {id: string, title: string, description: string, status: string}[]}} = {};
-    formError: TemplateRef<{ validation: string; message: string; control: AbstractControl<any,any>; }>|null;
     constructor(
       private fb: FormBuilder,
       private authService: AuthService,

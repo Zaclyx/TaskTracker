@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
         this.uid = '';
       }
       this.service.getUserDetails(this.uid).then((results) => {
-        this.projectId = results.projectId;
+        this.projectId = results[0]?.projectId;
         this.getTasks();
       });
     });

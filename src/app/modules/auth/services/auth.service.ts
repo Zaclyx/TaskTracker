@@ -205,6 +205,8 @@ export class AuthService implements OnDestroy {
           },
         });
 
+        
+
         // Update currentUserSubject with the new UserModel
         this.currentUserSubject.next(userModel);
 

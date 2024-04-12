@@ -1,14 +1,12 @@
 <div class="card mb-5 mb-xl-10">
   <div
-    class="card-header border-0 cursor-pointer"
-    role="button"
+    class="card-header border-0"
     data-bs-toggle="collapse"
     data-bs-target="#kt_account_profile_details"
     aria-expanded="true"
-    aria-controls="kt_account_profile_details"
   >
     <div class="card-title m-0">
-      <h3 class="fw-bolder m-0">Profile Details</h3>
+      <h1 class="fw-bolder m-0">Profile Details</h1>
     </div>
   </div>
   <div id="kt_account_profile_details" class="collapse show">
@@ -28,10 +26,19 @@
               <div class="col-lg-6 fv-row">
                 <input
                   type="text"
-                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                  class="form-control form-control-lg bg-transparent"
                   placeholder="Name"
                   formControlName="name"
+                  [ngClass]="{
+                    'is-invalid': profileForm.controls['name'].invalid && !isLoading,
+                    'is-valid': profileForm.controls['name'].valid && !isLoading
+                  }"
                 />
+                <ng-container *ngIf="profileForm.controls['name'].invalid">
+                  <div class="invalid-feedback">
+                    Full Name is required
+                  </div>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -45,10 +52,46 @@
               <div class="col-lg-6 fv-row">
                 <input
                   type="text"
-                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                  class="form-control form-control-lg bg-transparent"
                   placeholder="Project Id"
                   formControlName="projectId"
+                  (input)="handleInputChange($event)"
+                  [ngClass]="{
+                    'is-invalid': profileForm.controls['projectId'].invalid && !isLoading,
+                    'is-valid': profileForm.controls['projectId'].valid && !isLoading
+                  }"
                 />
+                <ng-container *ngIf="profileForm.controls['projectId'].invalid">
+                  <div class="invalid-feedback">
+                    Project Id is required
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-6">
+          <label class="col-lg-4 col-form-label required fw-bold fs-6"
+            >Project Name</label
+          >
+          <div class="col-lg-8">
+            <div class="row">
+              <div class="col-lg-6 fv-row">
+                <input
+                  type="text"
+                  class="form-control form-control-lg bg-transparent"
+                  placeholder="Project Name"
+                  formControlName="projectName"
+                  [ngClass]="{
+                    'is-invalid': profileForm.controls['projectName'].invalid && !isLoading,
+                    'is-valid': profileForm.controls['projectName'].valid && !isLoading
+                  }"
+                />
+                <ng-container *ngIf="profileForm.controls['projectName'].invalid">
+                  <div class="invalid-feedback">
+                    Project Name is required
+                  </div>
+                </ng-container>
               </div>
             </div>
           </div>
