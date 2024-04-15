@@ -111,10 +111,7 @@ export class SharedService {
     const snapshot = await getDocs(q);
     const snapshotDocId = snapshot.docs[0].id;
     const docRef = doc(this.fs, 'users', snapshotDocId);
-    setDoc(docRef, { lastLogin: Timestamp.now() }, { merge: true }).then(() => {
-      this.auth.logout();
-      document.location.reload();
-    });
+    setDoc(docRef, { lastLogin: Timestamp.now() }, { merge: true });
   }
 
   async profileUpdate(userId: string, projectExist: boolean, value: any) {
