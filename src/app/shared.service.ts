@@ -38,7 +38,10 @@ export class SharedService {
     const snapshot = await getDocs(q);
     const userResult = snapshot.docs[0].data();
 
-    const q2 = query(collection(this.fs, 'projects'), where('projectId', '==', userResult.projectId));
+    const q2 = query(
+      collection(this.fs, 'projects'),
+      where('projectId', '==', userResult.projectId)
+    );
     const snapshot2 = await getDocs(q2);
     const projectResult = snapshot2.docs[0].data();
 
@@ -46,9 +49,12 @@ export class SharedService {
   }
 
   async getProjectDetails(projectId: string) {
-    const q = query(collection(this.fs, 'projects'), where('projectId', '==', projectId));
+    const q = query(
+      collection(this.fs, 'projects'),
+      where('projectId', '==', projectId)
+    );
     const snapshot = await getDocs(q);
-    if (snapshot.docs.length == 0) return null
+    if (snapshot.docs.length == 0) return null;
     else return snapshot.docs[0].data();
   }
 
@@ -80,19 +86,22 @@ export class SharedService {
   }
 
   checkAndUpdateDueDates(): Observable<any> {
-    // Run check every hour
-    return interval(3600000).pipe(
-      switchMap(() => {
-        const tasksCollection = collection(this.fs, 'tasks');
-        return getDocs(tasksCollection); // Returning the promise
-      }),
+    const tasksCollection = collection(this.fs, 'tasks');
+    return from(
+      getDocs(query(tasksCollection, where('status', '==', 'In Progress')))
+    ).pipe(
       switchMap((snapshot) => {
         const updates: any[] = [];
         const currentDate = new Date();
 
         snapshot.forEach((doc) => {
           const data = doc.data();
-          const dueDate = data.dueDate.toDate(); // Assuming dueDate is a Firestore Timestamp
+          console.log(data);
+          console.log(data.duedt);
+          const dueDate = data.duedt.toDate(); // Assuming dueDate is a Firestore Timestamp
+
+          console.log('dueDate:', dueDate);
+          console.log('currDate:', currentDate);
 
           if (dueDate < currentDate) {
             updates.push(
@@ -119,9 +128,16 @@ export class SharedService {
     const snapshot = await getDocs(q);
     const snapshotDocId = snapshot.docs[0].id;
     const docRef = doc(this.fs, 'users', snapshotDocId);
-    setDoc(docRef, {name: value.name, projectId: value.projectId }, { merge: true });
+    setDoc(
+      docRef,
+      { name: value.name, projectId: value.projectId },
+      { merge: true }
+    );
 
-    const q2 = query(collection(this.fs, 'tasks'), where('userId', '==', userId));
+    const q2 = query(
+      collection(this.fs, 'tasks'),
+      where('userId', '==', userId)
+    );
     const snapshot2 = await getDocs(q2);
     snapshot2.forEach((task) => {
       const docRef2 = doc(this.fs, 'tasks', task.id);

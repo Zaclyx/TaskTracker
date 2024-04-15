@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -31,7 +27,7 @@ export class DashboardComponent implements OnInit {
   userCompletedTasks$: Observable<any[]>;
 
   ngOnInit(): void {
-    this.service.checkAndUpdateDueDates();
+    this.service.checkAndUpdateDueDates().subscribe((res) => console.log(res));
     this.getUid();
   }
 
