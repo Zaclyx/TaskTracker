@@ -34,11 +34,13 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         this.user = results[0];
         this.user.lastLogin = this.user.lastLogin.toDate();
       }
+      this.service.updateLastLogin(this.auth.currentUserSubject.value!.id.toString())
     });
   }
 
   logout() {
-    this.service.updateLastLogin(this.auth.currentUserSubject.value!.id.toString())
+    this.auth.logout();
+    document.location.reload();
   }
 
   selectLanguage(lang: string) {
