@@ -60,6 +60,7 @@ export class WeeklyTasksComponent{
       // Delete the task document
       await deleteDoc(taskRef);
       this.weeklyTasks[author].tasks = this.weeklyTasks[author].tasks.filter((t: any) => t.id !== task.id);
+      if (this.weeklyTasks[author].tasks.length === 0) this.weeklyTasksAuthor = this.weeklyTasksAuthor.filter((a: string) => a !== author);
       this.cdr.detectChanges();
       alert("Task deleted successfully");
     }
