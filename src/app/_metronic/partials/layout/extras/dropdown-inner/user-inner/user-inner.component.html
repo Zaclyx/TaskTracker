@@ -1,8 +1,8 @@
-<ng-container *ngIf="user$ | async as _user">
+<ng-container *ngIf="uid">
   <div class="menu-item px-3">
     <div class="menu-content d-flex align-items-center px-3">
       <div class="symbol symbol-50px me-5">
-        <img alt="Logo" [src]="_user.pic" />
+        <img alt="Logo" src="./assets/media/avatars/blank.png" />
       </div>
 
       <div class="d-flex flex-column">
@@ -10,21 +10,19 @@
           {{ user?.name }}
         </div>
         <a class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer">
-          {{ _user.email }}
+          {{ user.email }}
         </a>
       </div>
     </div>
     <a class="fw-bold text-muted text-hover-primary fs-7">
-      Last Login: {{ user?.lastLogin | date: 'medium'}}
+      Last Login: {{ user?.lastLogin | date : "medium" }}
     </a>
   </div>
 
   <div class="separator my-2"></div>
 
   <div class="menu-item px-5">
-    <a routerLink="profile" class="menu-link px-5">
-      My Profile
-    </a>
+    <a routerLink="profile" class="menu-link px-5"> My Profile </a>
   </div>
 
   <div class="menu-item px-5">

@@ -3,6 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { TranslationService } from '../../../../../../modules/i18n';
 import { AuthService, UserType } from '../../../../../../modules/auth';
 import { SharedService } from 'src/app/shared.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-user-inner',
@@ -16,6 +17,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   language: LanguageFlag;
   user$: Observable<UserType>;
   user: any;
+  uid: string;
   langs = languages;
   private unsubscribe: Subscription[] = [];
 
@@ -23,7 +25,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private translationService: TranslationService,
     private service: SharedService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private afa: AngularFireAuth
   ) {
     this.service.sharedSubjectName$.subscribe((name: string) => {
       if (this.user != undefined) {
@@ -36,17 +39,32 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.user$ = this.auth.currentUserSubject.asObservable();
     this.setLanguage(this.translationService.getSelectedLanguage());
-    this.service.getUserDetails(this.auth.currentUserSubject.value!.id.toString()).then((results) => {
-      if (results[0] != undefined) {
-        this.user = results[0];
-        this.user.lastLogin = this.user.lastLogin.toDate();
+    this.getUid();
+  }
+
+  getUid() {
+    this.afa.authState.subscribe((user) => {
+      if (user) {
+        this.uid = user.uid || '';
+      } else {
+        this.uid = '';
       }
-      this.service.updateLastLogin(this.auth.currentUserSubject.value!.id.toString())
+      this.service.getUserDetails(this.uid).then((results) => {
+        if (results[0] != undefined) {
+          this.user = results[0];
+          this.user.lastLogin = this.user.lastLogin.toDate();
+        }
+        this.updateLastLogin();
+      });
     });
   }
 
+  updateLastLogin() {
+    this.service.updateLastLogin(this.uid);
+  }
+
   logout() {
-    this.auth.logout();
+    this.auth.logoutFirebase();
     document.location.reload();
   }
 
