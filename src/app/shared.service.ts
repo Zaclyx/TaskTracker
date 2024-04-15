@@ -24,6 +24,8 @@ import { AuthService } from './modules/auth';
 export class SharedService {
   private currentTask = new BehaviorSubject<any>(null);
   currentTask$ = this.currentTask.asObservable();
+  private sharedSubjectName = new BehaviorSubject<any>(null);
+  sharedSubjectName$ = this.sharedSubjectName.asObservable();
 
   constructor(private fs: Firestore, private auth: AuthService) {}
 
@@ -106,6 +108,10 @@ export class SharedService {
     );
   }
 
+  updateSharedData(data: any) {
+    this.sharedSubjectName.next(data);
+  }
+
   async updateLastLogin(userId: string) {
     const q = query(collection(this.fs, 'users'), where('uid', '==', userId));
     const snapshot = await getDocs(q);
@@ -121,21 +127,16 @@ export class SharedService {
     const docRef = doc(this.fs, 'users', snapshotDocId);
     setDoc(docRef, {name: value.name, projectId: value.projectId }, { merge: true });
 
-    const q2 = query(collection(this.fs, 'tasks'), where('userId', '==', userId));
-    const snapshot2 = await getDocs(q2);
-    snapshot2.forEach((task) => {
-      const docRef2 = doc(this.fs, 'tasks', task.id);
-      setDoc(docRef2, { userName: value.name }, { merge: true });
-    });
-
     if (!projectExist) {
-      const q3 = collection(this.fs, 'projects');
+      const q2 = collection(this.fs, 'projects');
       const payload = {
         projectId: value.projectId,
         projectName: value.projectName,
       };
-      addDoc(q3, payload);
+      addDoc(q2, payload);
     }
+
+    this.updateSharedData(value.name);
   }
 }
 //   createReminder(ReminderInterfaceDTO: any) {

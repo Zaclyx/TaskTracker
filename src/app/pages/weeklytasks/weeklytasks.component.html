@@ -25,22 +25,22 @@
       </div>
       <button class="btn btn-primary mt-5 mb-3" style="background-color: forestgreen;" routerLink="/addtasks">Add Task</button>
     </div>
-    <div *ngIf="weeklyTasksAuthor.length == 0">
+    <div *ngIf="(weeklyTasksAuthor | json) == '{}'">
       <div class="text-center">
         <h2>No tasks are due for Week {{currentWeek}}</h2>
       </div>
     </div>
     <div id="accordion">
-      <div *ngFor="let author of weeklyTasksAuthor">
+      <div *ngFor="let author of weeklyTasksAuthor | keyvalue">
         <div class="card">
           <div id="headingOne" class="text-center">
             <a style="font-size: x-large; font-weight: bold; display: inline-block; margin-top: 10px;">
-                {{author}}
+                {{author.value}}
             </a>
           </div>
           <div id="customer1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="row">
-                  <div *ngFor="let task of weeklyTasks[author].tasks" class="col-sm-6">
+                  <div *ngFor="let task of weeklyTasks[author.value].tasks" class="col-sm-6">
                       <div class="card mt-5 mb-5 ml-5">
                         <div class="card-body">
                           <div class="d-flex justify-content-between">
@@ -54,15 +54,15 @@
                             <div>
                               <div class="row">
                                   <div class="col">
-                                    <button (click)="markAsComplete(author, task)" [disabled]="task.status === 'Completed'" [hidden]="task.status === 'Completed'" class="btn btn-primary mb-3" style="background-color:rgb(0, 172, 114);">
+                                    <button (click)="markAsComplete(author.value, task)" [disabled]="task.status === 'Completed'" [hidden]="task.status === 'Completed'" class="btn btn-primary mb-3" style="background-color:rgb(0, 172, 114);">
                                       Mark as complete
                                     </button>
-                                    <button (click)="deleteWeeklyTask(author, task)" [disabled]="author !== userName" class="btn btn-primary mb-3" style="background-color: crimson;">
+                                    <button (click)="deleteWeeklyTask(author.value, task)" [disabled]="author.value !== userName" class="btn btn-primary mb-3" style="background-color: crimson;">
                                       Delete Task
                                     </button>
                                   </div>
                                   <div class="col text-end">
-                                    <button (click)="navigateToEditTask(task)" [disabled]="author !== userName" class="btn btn-primary mb-3">
+                                    <button (click)="navigateToEditTask(task)" [disabled]="author.value !== userName" class="btn btn-primary mb-3">
                                       Edit Task
                                     </button>
                                   </div>

@@ -14,7 +14,7 @@ export class WeeklyTasksComponent{
   public userId: string;
   public userName: string;
   public projectId: string;
-  public weeklyTasksAuthor: any[] = [];
+  public weeklyTasksAuthor: {[key: string]: string} = {};
   public weeklyTasks: {[key: string]: {tasks: {id: string, title: string, description: string, status: string}[]}} = {};
   public currentWeek: number = this.getCurrentWeek(new Date());
   public currentYear: number = new Date().getFullYear();
@@ -45,12 +45,17 @@ export class WeeklyTasksComponent{
   async getWeeklyTasks() {
     const q = query(collection(this.firestore, 'tasks'));
     const snapshot = await getDocs(q);
-    snapshot.docs.filter(doc => this.getCurrentWeek(doc.data().duedt.toDate()) === this.currentWeek && doc.data().duedt.toDate().getFullYear() === this.currentYear && doc.data().projectId === this.projectId).map(doc => {
-      if (!this.weeklyTasks[doc.data().userName]) this.weeklyTasks[doc.data().userName] = {tasks: []};
-      this.weeklyTasks[doc.data().userName].tasks.push({ id: doc.id, title: doc.data().title, description: doc.data().description, status: doc.data().status, ...doc.data() });
+    snapshot.docs.filter(doc => this.getCurrentWeek(doc.data().duedt.toDate()) === this.currentWeek && doc.data().duedt.toDate().getFullYear() === this.currentYear && doc.data().projectId === this.projectId).map(async doc => {
+      if (!(this.weeklyTasksAuthor && this.weeklyTasksAuthor.hasOwnProperty(doc.data().userId))) {
+        const q2 = query(collection(this.firestore, 'users'), where('uid', '==', doc.data().userId));
+        const snapshot2 = await getDocs(q2);
+        this.weeklyTasksAuthor[doc.data().userId] = snapshot2.docs[0].data().name;
+      }
+      const authorName = this.weeklyTasksAuthor[doc.data().userId]
+      if (!this.weeklyTasks[authorName]) this.weeklyTasks[authorName] = {tasks: []};
+      this.weeklyTasks[authorName].tasks.push({ id: doc.id, title: doc.data().title, description: doc.data().description, status: doc.data().status, ...doc.data() });
+      this.cdr.detectChanges();
     });
-    this.weeklyTasksAuthor = Object.keys(this.weeklyTasks);
-    this.cdr.detectChanges();
   }
 
   async deleteWeeklyTask(author: string, task: any) {
@@ -60,7 +65,9 @@ export class WeeklyTasksComponent{
       // Delete the task document
       await deleteDoc(taskRef);
       this.weeklyTasks[author].tasks = this.weeklyTasks[author].tasks.filter((t: any) => t.id !== task.id);
-      if (this.weeklyTasks[author].tasks.length === 0) this.weeklyTasksAuthor = this.weeklyTasksAuthor.filter((a: string) => a !== author);
+      if (this.weeklyTasks[author].tasks.length === 0) {
+        delete this.weeklyTasksAuthor[task.userId];
+      }
       this.cdr.detectChanges();
       alert("Task deleted successfully");
     }
@@ -139,7 +146,7 @@ export class WeeklyTasksComponent{
   }
 
   clear() {
-    this.weeklyTasksAuthor = [];
+    this.weeklyTasksAuthor = {};
     this.weeklyTasks = {};
   }
 }

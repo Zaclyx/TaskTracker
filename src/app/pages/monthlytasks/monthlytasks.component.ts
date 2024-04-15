@@ -14,7 +14,7 @@ export class MonthlyTasksComponent{
   public userId: string;
   public userName: string;
   public projectId: string;
-  public monthlyTasksAuthor: any[] = [];
+  public monthlyTasksAuthor: {[key: string]: string} = {};
   public monthlyTasks: {[key: string]: {tasks: {id: string, title: string, description: string, status: string}[]}} = {};
   public months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   public currentMonth: number = new Date().getMonth();
@@ -43,22 +43,29 @@ export class MonthlyTasksComponent{
   async getMonthlyTasks() {
     const q = query(collection(this.firestore, 'tasks'));
     const snapshot = await getDocs(q);
-    snapshot.docs.filter(doc => doc.data().duedt.toDate().getMonth() === this.currentMonth && doc.data().duedt.toDate().getFullYear() === this.currentYear && doc.data().projectId === this.projectId).map(doc => {
-      if (!this.monthlyTasks[doc.data().userName]) this.monthlyTasks[doc.data().userName] = {tasks: []};
-      this.monthlyTasks[doc.data().userName].tasks.push({ id: doc.id, title: doc.data().title, description: doc.data().description, status: doc.data().status, ...doc.data() });
+    snapshot.docs.filter(doc => doc.data().duedt.toDate().getMonth() === this.currentMonth && doc.data().duedt.toDate().getFullYear() === this.currentYear && doc.data().projectId === this.projectId).map(async doc => {
+      if (!(this.monthlyTasksAuthor && this.monthlyTasksAuthor.hasOwnProperty(doc.data().userId))) {
+        const q2 = query(collection(this.firestore, 'users'), where('uid', '==', doc.data().userId));
+        const snapshot2 = await getDocs(q2);
+        this.monthlyTasksAuthor[doc.data().userId] = snapshot2.docs[0].data().name;
+      }
+      const authorName = this.monthlyTasksAuthor[doc.data().userId]
+      if (!this.monthlyTasks[authorName]) this.monthlyTasks[authorName] = {tasks: []};
+      this.monthlyTasks[authorName].tasks.push({ id: doc.id, title: doc.data().title, description: doc.data().description, status: doc.data().status, ...doc.data() });
+      this.cdr.detectChanges();
     });
-    this.monthlyTasksAuthor = Object.keys(this.monthlyTasks);
-    this.cdr.detectChanges();
   }
 
-  async deleteWeeklyTask(author: string, task: any) {
+  async deleteMonthlyTask(author: string, task: any) {
     if (author === this.userName) {
       // Construct a reference to the task document
       const taskRef = doc(this.firestore, 'tasks', task.id);
       // Delete the task document
       await deleteDoc(taskRef);
       this.monthlyTasks[author].tasks = this.monthlyTasks[author].tasks.filter((t: any) => t.id !== task.id);
-      if (this.monthlyTasks[author].tasks.length === 0) this.monthlyTasksAuthor = this.monthlyTasksAuthor.filter((a: string) => a !== author);
+      if (this.monthlyTasks[author].tasks.length === 0) {
+        delete this.monthlyTasksAuthor[task.userId];
+      }
       this.cdr.detectChanges();
       alert("Task deleted successfully");
     }
@@ -128,7 +135,7 @@ export class MonthlyTasksComponent{
   }
 
   clear() {
-    this.monthlyTasksAuthor = [];
+    this.monthlyTasksAuthor = {};
     this.monthlyTasks = {};
   }
 }

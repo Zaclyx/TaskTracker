@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { TranslationService } from '../../../../../../modules/i18n';
 import { AuthService, UserType } from '../../../../../../modules/auth';
@@ -23,8 +23,15 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private translationService: TranslationService,
     private service: SharedService,
-    
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) {
+    this.service.sharedSubjectName$.subscribe((name: string) => {
+      if (this.user != undefined) {
+        this.user.name = name;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.user$ = this.auth.currentUserSubject.asObservable();
@@ -46,7 +53,6 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   selectLanguage(lang: string) {
     this.translationService.setLanguage(lang);
     this.setLanguage(lang);
-    // document.location.reload();
   }
 
   setLanguage(lang: string) {
