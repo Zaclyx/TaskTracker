@@ -58,6 +58,7 @@ export class MonthlyTasksComponent{
       // Delete the task document
       await deleteDoc(taskRef);
       this.monthlyTasks[author].tasks = this.monthlyTasks[author].tasks.filter((t: any) => t.id !== task.id);
+      if (this.monthlyTasks[author].tasks.length === 0) this.monthlyTasksAuthor = this.monthlyTasksAuthor.filter((a: string) => a !== author);
       this.cdr.detectChanges();
       alert("Task deleted successfully");
     }
