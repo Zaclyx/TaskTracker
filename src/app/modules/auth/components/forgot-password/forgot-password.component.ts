@@ -50,14 +50,25 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  submit() {
+  async submit() {
     this.errorState = ErrorStates.NotSubmitted;
-    const forgotPasswordSubscr = this.authService
-      .forgotPassword(this.f.email.value)
-      .pipe(first())
-      .subscribe((result: boolean) => {
-        this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
-      });
-    this.unsubscribe.push(forgotPasswordSubscr);
+    try {
+      await this.authService.forgotPassword(this.f.email.value);
+      this.errorState = ErrorStates.NoError;
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      this.errorState = ErrorStates.HasError;
+    }
   }
+
+  // submit() {
+  //   this.errorState = ErrorStates.NotSubmitted;
+  //   const forgotPasswordSubscr = this.authService
+  //     .forgotPassword(this.f.email.value)
+  //     .pipe(first())
+  //     .subscribe((result: boolean) => {
+  //       this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
+  //     });
+  //   this.unsubscribe.push(forgotPasswordSubscr);
+  // }
 }
