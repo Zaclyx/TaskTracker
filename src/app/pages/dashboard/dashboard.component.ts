@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
   uid: string;
   projectId: string;
   username: string;
+  projectName: string;
   userInProgressTasks$: Observable<any[]>;
   userOverdueTasks$: Observable<any[]>;
   userCompletedTasks$: Observable<any[]>;
@@ -44,7 +45,14 @@ export class DashboardComponent implements OnInit {
       this.service.getUserDetails(this.uid).then((results) => {
         this.projectId = results[0]?.projectId;
         this.getTasks();
+        this.getProjectDetails();
       });
+    });
+  }
+
+  getProjectDetails() {
+    this.service.getProjectDetails(this.projectId).then((res) => {
+      this.projectName = res?.projectName;
     });
   }
 

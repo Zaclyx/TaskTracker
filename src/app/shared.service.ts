@@ -3,19 +3,16 @@ import {
   Firestore,
   Timestamp,
   addDoc,
-  and,
   collection,
   collectionData,
-  deleteDoc,
   doc,
-  getDoc,
   getDocs,
   orderBy,
   query,
   setDoc,
   where,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, from, interval, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, from, switchMap } from 'rxjs';
 import { AuthService } from './modules/auth';
 
 @Injectable({
