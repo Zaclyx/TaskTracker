@@ -38,8 +38,9 @@
                   'is-invalid': taskForm.controls['status'].invalid,
                   'is-valid': taskForm.controls['status'].valid
                 }">
-                <option value="In Progress">In Progress</option>
+                <option value="In Progress" [hidden]="currentTask.status == 'Overdue'">In Progress</option>
                 <option value="Completed">Completed</option>
+                <option value="Overdue" [hidden]="true">Overdue</option>
             </select>
             <ng-container *ngIf="taskForm.controls['status'].invalid">
               <div class="invalid-feedback">
