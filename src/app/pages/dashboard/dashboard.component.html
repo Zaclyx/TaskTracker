@@ -1,8 +1,15 @@
 <div class="jumbotron">
   <h1 class="card-title fw-bolder text-gray-900">Dashboard</h1>
-  <p class="lead">
-    Provide an overview of all the tasks in an organised and clean way
-  </p>
+  <div class="row">
+    <div class="col">
+      <p class="lead mt-5">
+        Provide an overview of all the tasks in an organised and clean way
+      </p>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary mb-3" (click)="saveAsExcel()">Save as Excel</button>
+    </div>
+  </div>
   <hr class="my-4" />
   <div class="row g-5 g-xl-8">
     <div class="col-xl-4">

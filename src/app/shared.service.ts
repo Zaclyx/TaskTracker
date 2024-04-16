@@ -77,7 +77,7 @@ export class SharedService {
         tasksCollection,
         where('projectId', '==', projectId),
         where('status', '==', status),
-        orderBy('duedt')
+        orderBy('duedt', 'desc')
       );
     }
     return collectionData(q, { idField: 'id' });
