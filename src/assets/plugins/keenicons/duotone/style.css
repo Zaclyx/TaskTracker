@@ -700,11 +700,12 @@
 }
 .ki-archive-tick .path1:before {
   content: "\e986";
-  
+  color: green;
   opacity: 0.3;
 }
 .ki-archive-tick .path2:before {
   content: "\e987";
+  color: green;
   position: absolute; left: 0;
   
 }

@@ -3,78 +3,231 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col">
-          <div aria-label="Page navigation example" class="mt-6" style="justify-content: center;">
+          <div
+            aria-label="Page navigation example"
+            class="mt-6"
+            style="justify-content: center"
+          >
             <ul class="pagination justify-content-center">
               <li class="page-item mr-10">
-                <button (click)="previous()" class="page-link" style="color: #007bff; font-size: medium; margin-top: 10px;">Previous</button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="previous()"
+                  style="font-size: medium; margin-top: 10px"
+                >
+                  Previous
+                </button>
               </li>
               <li class="page-item mr-10">
-                <a class="d-flex align-items-center" style="color: #007bff; font-size: x-large;">
-                  <span style="white-space: nowrap;">Month {{ months[currentMonth] }} for Year</span>
-                  <select (change)="onYearChange($event)" class="form-select ms-2" style="color: #007bff; font-size: x-large;">
-                    <option *ngFor="let year of years" [selected]="year === currentYear" [value]="year">{{ year }}</option>
+                <a
+                  class="d-flex align-items-center"
+                  style="color: black; font-size: x-large"
+                >
+                  <span style="white-space: nowrap"
+                    >Month {{ months[currentMonth] }} for Year</span
+                  >
+                  <select
+                    (change)="onYearChange($event)"
+                    class="form-select ms-2"
+                    style="color: #007bff; font-size: x-large"
+                  >
+                    <option
+                      *ngFor="let year of years"
+                      [selected]="year === currentYear"
+                      [value]="year"
+                    >
+                      {{ year }}
+                    </option>
                   </select>
                 </a>
               </li>
               <li class="page-item mr-10">
-                <button (click)="next()" class="page-link" style="color: #007bff; font-size: medium; margin-top: 10px;">Next</button>
+                <button
+                  (click)="next()"
+                  mat-raised-button
+                  color="primary"
+                  style="font-size: medium; margin-top: 10px"
+                >
+                  Next
+                </button>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <button class="btn btn-primary mt-5 mb-3" style="background-color: forestgreen;" routerLink="/addtasks">Add Task</button>
+      <button
+        class="btn btn-primary mt-5 mb-3"
+        style="background-color: forestgreen"
+        routerLink="/addtasks"
+      >
+        Add Task
+      </button>
     </div>
     <div *ngIf="(monthlyTasksAuthor | json) == '{}'">
       <div class="text-center">
-        <h2>No tasks are due for the month of {{months[currentMonth]}}</h2>
+        <h2>No tasks are due for the month of {{ months[currentMonth] }}</h2>
       </div>
     </div>
     <div id="accordion">
-      <div *ngFor="let author of monthlyTasksAuthor | keyvalue">
-        <div class="card">
+      <div
+        *ngFor="let author of monthlyTasksAuthor | keyvalue"
+        class="card mt-6 mb-6"
+        style="padding: 10px 5px 20px 5px; border-color: lightgray"
+      >
+        <div>
           <div id="headingOne" class="text-center">
-            <a style="font-size: x-large; font-weight: bold; display: inline-block; margin-top: 10px;">
-                {{author.value}}
+            <a
+              style="
+                font-size: x-large;
+                font-weight: bold;
+                display: inline-block;
+                margin-top: 10px;
+                margin-bottom: 20px;
+              "
+            >
+              {{ author.value }}
             </a>
+            <hr style="padding-bottom: 10px" />
           </div>
-          <div id="customer1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="row">
-                  <div *ngFor="let task of monthlyTasks[author.value].tasks" class="col-sm-6">
-                      <div class="card mt-5 mb-5 ml-5">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between">
-                            <h2 class="card-title">{{task.title}}</h2>
-                            <span [ngClass]="task.status === 'Completed' ? 'badge badge-light-success fs-8 fw-bolder' : 'badge badge-light-warning fs-8 fw-bolder'">
-                              {{task.status}}
-                            </span>
-                          </div>
-                          <div>
-                            <p class="card-text">{{task.description}}</p>
-                            <div>
-                              <div class="row">
-                                  <div class="col">
-                                    <button (click)="markAsComplete(author.value, task)" [disabled]="task.status === 'Completed'" [hidden]="task.status === 'Completed'" class="btn btn-primary mb-3" style="background-color:rgb(0, 172, 114);">
-                                      Mark as complete
-                                    </button>
-                                    <button (click)="deleteMonthlyTask(author.value, task)" [disabled]="author.value !== userName" class="btn btn-primary mb-3" style="background-color: crimson;">
-                                      Delete Task
-                                    </button>
-                                  </div>
-                                  <div class="col text-end">
-                                    <button (click)="navigateToEditTask(task)" [disabled]="author.value !== userName" class="btn btn-primary mb-3">
-                                      Edit Task
-                                    </button>
-                                  </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+          <div
+            id="customer1"
+            class="collapse show"
+            aria-labelledby="headingOne"
+            data-parent="#accordion"
+          >
+            <div class="row">
+              <div
+                *ngFor="let task of monthlyTasks[author.value].tasks"
+                class="col-sm-6"
+              >
+                <!-- begin::Body -->
+                <div
+                  class="card card-body pb-0"
+                  style="margin-left: 30px; margin-right: 30px"
+                >
+                  <!-- begin::Header -->
+                  <div class="d-flex align-items-center mb-5">
+                    <!-- begin::User -->
+                    <div class="d-flex align-items-center flex-grow-1">
+                      <!-- begin::Avatar -->
+                      <div
+                        class="symbol symbol-50px me-5"
+                        *ngIf="task.status === 'Completed'"
+                      >
+                        <span class="symbol-label bg-light-success">
+                          <span
+                            [inlineSVG]="
+                              './assets/media/icons/duotune/abstract/abs027.svg'
+                            "
+                            class="svg-icon svg-icon-2x svg-icon-success"
+                          ></span>
+                        </span>
                       </div>
+                      <!-- begin::Avatar -->
+                      <div
+                        class="symbol symbol-50px me-5"
+                        *ngIf="task.status === 'In Progress'"
+                      >
+                        <span class="symbol-label bg-light-warning">
+                          <span
+                            [inlineSVG]="
+                              './assets/media/icons/duotune/art/art005.svg'
+                            "
+                            class="svg-icon svg-icon-2x svg-icon-warning"
+                          ></span>
+                        </span>
+                      </div>
+                      <div
+                        class="symbol symbol-50px me-5"
+                        *ngIf="task.status === 'Overdue'"
+                      >
+                        <span class="symbol-label bg-light-danger">
+                          <span
+                            [inlineSVG]="
+                              './assets/media/icons/duotune/coding/cod008.svg'
+                            "
+                            class="svg-icon svg-icon-2x svg-icon-danger"
+                          ></span>
+                        </span>
+                      </div>
+                      <!-- end::Avatar -->
+                      <!-- begin::Info -->
+                      <div class="d-flex flex-column">
+                        <h1 style="margin-bottom: 0px">
+                          {{ task.title }}
+                        </h1>
+
+                        <span class="text-gray-500 fw-bold">{{
+                          task.status
+                        }}</span>
+                      </div>
+                      <!-- end::Info -->
+                    </div>
+                    <!-- end::User -->
                   </div>
+                  <!-- end::Header -->
+
+                  <!-- begin::Post -->
+                  <div class="mb-5">
+                    <!-- begin::Text -->
+                    <p class="text-gray-800 fw-normal mb-5">
+                      {{ task.description }}
+                    </p>
+                    <!-- end::Text -->
+
+                    <!-- begin::Toolbar -->
+                    <div class="d-flex align-items-center mb-5 ms-auto">
+                      <a
+                        [class.disabled]="task.status === 'Completed'"
+                        title="Mark As Completed"
+                        [hidden]="task.status === 'Completed'"
+                        (click)="markAsComplete(author.value, task)"
+                        class="btn btn-sm btn-light btn-active-light-success px-4 py-2 me-4"
+                      >
+                        <a class="cursor-pointer">
+                          <app-keenicon
+                            name="archive-tick"
+                            class="fs-1 svg-icon-2x"
+                          ></app-keenicon>
+                        </a>
+                      </a>
+                      <a
+                        [class.disabled]="author.value !== userName"
+                        title="Delete Task"
+                        (click)="deleteMonthlyTask(author.value, task)"
+                        class="btn btn-sm btn-light btn-active-light-danger px-4 py-2 me-4"
+                      >
+                        <span
+                          [inlineSVG]="
+                            './assets/media/icons/duotune/general/gen027.svg'
+                          "
+                          class="svg-icon svg-icon-2x"
+                        ></span>
+                      </a>
+                      <a
+                        [class.disabled]="author.value !== userName"
+                        title="Edit Task"
+                        (click)="navigateToEditTask(task)"
+                        class="btn btn-sm btn-light btn-color-primary btn-active-light-primary px-4 py-2 me-4"
+                      >
+                        <span
+                          [inlineSVG]="
+                            './assets/media/icons/duotune/art/art005.svg'
+                          "
+                          class="svg-icon svg-icon-2x"
+                        ></span>
+                      </a>
+                    </div>
+                    <!-- end::Toolbar -->
+                  </div>
+                  <!-- end::Post -->
+                </div>
+                <!-- end::Body -->
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
