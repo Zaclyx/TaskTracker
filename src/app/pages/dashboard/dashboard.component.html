@@ -7,16 +7,79 @@
       </p>
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary mb-3" (click)="saveAsExcel()">Save as Excel</button>
+      <button class="btn btn-primary mb-3" (click)="saveAsExcel()">
+        Save as Excel
+      </button>
     </div>
   </div>
-  <hr class="my-4" />
+  <div class="card card-xl-stretch mb-xl-8">
+    <!-- begin::Header -->
+    <div class="px-9 pt-7 card-rounded h-275px w-100" [ngClass]="'bg-primary'">
+      <!-- begin::Heading -->
+      <div class="d-flex flex-stack">
+        <h3 class="m-0 text-white fw-bolder fs-3">Tasks Summary</h3>
+      </div>
+      <!-- end::Heading -->
+      <!-- begin::Balance -->
+      <div class="d-flex text-center flex-column text-white pt-8">
+        <span class="fw-bold fs-7">Current Project</span>
+        <span class="fw-bolder fs-2x pt-1">{{ projectName }}</span>
+      </div>
+      <!-- end::Balance -->
+    </div>
+    <!-- end::Header -->
+    <!-- begin::Stats -->
+    <div class="card-p mt-n20 position-relative">
+      <!-- begin::Row -->
+      <div class="row g-0">
+        <!-- begin::Col -->
+        <div class="col bg-light-warning px-6 py-8 rounded-2 me-7 mb-7">
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/general/gen032.svg'"
+            class="svg-icon svg-icon-3x svg-icon-warning d-block my-2"
+          ></span>
+          <a
+            href="#"
+            routerLink="/weeklytasks"
+            class="text-warning fw-bold fs-6"
+          >
+            Weekly Tasks
+          </a>
+        </div>
+        <!-- end::Col -->
+        <!-- begin::Col -->
+        <div class="col bg-light-primary px-6 py-8 rounded-2 mb-7">
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/finance/fin006.svg'"
+            class="svg-icon svg-icon-3x svg-icon-primary d-block my-2"
+          ></span>
+          <a
+            href="#"
+            routerLink="/monthlytasks"
+            class="text-primary fw-bold fs-6"
+          >
+            Monthly Tasks
+          </a>
+        </div>
+        <!-- end::Col -->
+      </div>
+      <!-- end::Row -->
+    </div>
+    <!-- end::Stats -->
+  </div>
   <div class="row g-5 g-xl-8">
     <div class="col-xl-4">
-      <div ngClass="card-xl-stretch mb-xl-8">
+      <div ngClass="card card-xl-stretch mb-xl-8">
         <!-- begin::Header -->
-        <div class="card-header border-0">
-          <h2 class="card-title fw-bolder text-gray-900">In Progress</h2>
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bolder text-gray-900"
+              >Tasks In Progress</span
+            >
+            <span class="text-muted mt-1 fw-bold fs-7"
+              >{{ (userInProgressTasks$ | async)?.length }} Tasks</span
+            >
+          </h3>
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
@@ -35,14 +98,14 @@
                   <span class="symbol-label bg-light-warning">
                     <span
                       [inlineSVG]="
-                        './assets/media/icons/duotune/abstract/abs027.svg'
+                        './assets/media/icons/duotune/art/art005.svg'
                       "
                       class="svg-icon svg-icon-2x svg-icon-warning"
                     ></span>
                   </span>
                 </div>
-                <!-- end::Checkbox -->
-                <!-- begin::Description -->
+                <!-- end::Symbol -->
+                <!-- begin::Text -->
                 <div class="d-flex flex-column">
                   <a
                     (click)="navigateToWeeklyTask(task)"
@@ -65,17 +128,24 @@
         </ng-container>
         <ng-template #emptyInProgressTasks>
           <div class="card-body">
-            <p>No tasks in progress</p>
+            <p>No Tasks In Progress</p>
           </div>
         </ng-template>
         <!-- end::Body -->
       </div>
     </div>
     <div class="col-xl-4">
-      <div ngClass="card-xl-stretch mb-xl-8">
+      <div ngClass="card card-xl-stretch mb-xl-8">
         <!-- begin::Header -->
-        <div class="card-header border-0">
-          <h2 class="card-title fw-bolder text-gray-900">Overdue</h2>
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bolder text-gray-900"
+              >Overdue Tasks</span
+            >
+            <span class="text-muted mt-1 fw-bold fs-7"
+              >{{ (userOverdueTasks$ | async)?.length }} Tasks</span
+            >
+          </h3>
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
@@ -91,7 +161,7 @@
                   <span class="symbol-label bg-light-danger">
                     <span
                       [inlineSVG]="
-                        './assets/media/icons/duotune/abstract/abs027.svg'
+                        './assets/media/icons/duotune/coding/cod008.svg'
                       "
                       class="svg-icon svg-icon-2x svg-icon-danger"
                     ></span>
@@ -122,17 +192,24 @@
         </ng-container>
         <ng-template #emptyOverdueTasks>
           <div class="card-body">
-            <p>No overdue tasks</p>
+            <p>No Overdue Tasks</p>
           </div>
         </ng-template>
         <!-- end::Body -->
       </div>
     </div>
     <div class="col-xl-4">
-      <div ngClass="card-xl-stretch mb-xl-8">
+      <div ngClass="card card-xl-stretch mb-xl-8">
         <!-- begin::Header -->
-        <div class="card-header border-0">
-          <h2 class="card-title fw-bolder text-gray-900">Completed</h2>
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bolder text-gray-900"
+              >Completed Tasks</span
+            >
+            <span class="text-muted mt-1 fw-bold fs-7"
+              >{{ (userOverdueTasks$ | async)?.length }} Tasks</span
+            >
+          </h3>
         </div>
         <!-- end::Header -->
         <!-- begin::Body -->
@@ -145,13 +222,10 @@
           <ng-container *ngFor="let task of userCompletedTasks$ | async">
             <div class="card-body pt-5">
               <!-- begin::Item -->
-              <div class="d-flex align-items-center mb-7">
-                <!-- begin::Icon -->
+              <div class="d-flex align-items-center">
+                <!-- begin::Symbol -->
                 <div class="symbol symbol-50px me-5">
-                  <span
-                    class="symbol-label"
-                    style="background-color: rgba(67, 255, 111, 0.116)"
-                  >
+                  <span class="symbol-label bg-light-success">
                     <span
                       [inlineSVG]="
                         './assets/media/icons/duotune/abstract/abs027.svg'
@@ -160,7 +234,7 @@
                     ></span>
                   </span>
                 </div>
-                <!-- end::Icon -->
+                <!-- end::Symbol -->
                 <!-- begin::Title -->
                 <div class="d-flex flex-column">
                   <a

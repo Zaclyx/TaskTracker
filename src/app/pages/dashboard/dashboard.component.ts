@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
   uid: string;
   projectId: string;
   username: string;
+  projectName: string;
   userInProgressTasks$: Observable<any[]>;
   userOverdueTasks$: Observable<any[]>;
   userCompletedTasks$: Observable<any[]>;
@@ -44,7 +45,14 @@ export class DashboardComponent implements OnInit {
       this.service.getUserDetails(this.uid).then((results) => {
         this.projectId = results[0]?.projectId;
         this.getTasks();
+        this.getProjectDetails();
       });
+    });
+  }
+
+  getProjectDetails() {
+    this.service.getProjectDetails(this.projectId).then((res) => {
+      this.projectName = res?.projectName;
     });
   }
 
@@ -110,28 +118,30 @@ export class DashboardComponent implements OnInit {
     let tasks: any[] = [];
 
     // Concatenate tasks from each observable sequentially
-    this.userInProgressTasks$.pipe(
-      concatMap(inProgressTasks => {
-        this.pushTasks(inProgressTasks, tasks);
-        return this.userCompletedTasks$;
-      }),
-      concatMap(completedTasks => {
-        this.pushTasks(completedTasks, tasks);
-        return this.userOverdueTasks$;
-      })
-    ).subscribe(overdueTasks => {
-      // All tasks are accumulated, proceed with creating Excel file
-      this.pushTasks(overdueTasks, tasks);
-  
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(tasks);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Tasks');
-      XLSX.writeFile(wb, 'AllTasks.xlsx');
-    });
+    this.userInProgressTasks$
+      .pipe(
+        concatMap((inProgressTasks) => {
+          this.pushTasks(inProgressTasks, tasks);
+          return this.userCompletedTasks$;
+        }),
+        concatMap((completedTasks) => {
+          this.pushTasks(completedTasks, tasks);
+          return this.userOverdueTasks$;
+        })
+      )
+      .subscribe((overdueTasks) => {
+        // All tasks are accumulated, proceed with creating Excel file
+        this.pushTasks(overdueTasks, tasks);
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(tasks);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Tasks');
+        XLSX.writeFile(wb, 'AllTasks.xlsx');
+      });
   }
-  
+
   private pushTasks(tasks: any[], allTasks: any[]) {
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
       allTasks.push({
         Title: task.title,
         Description: task.description,
