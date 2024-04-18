@@ -705,6 +705,7 @@
 }
 .ki-archive-tick .path2:before {
   content: "\e987";
+  fill: green;
   position: absolute; left: 0;
   
 }
