@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit {
       differenceInDays = Math.floor(
         differenceInMilliseconds / (1000 * 60 * 60 * 24)
       );
-      return differenceInDays;
+      return differenceInDays < 0 ? 0 : differenceInDays + 1;
     } else {
       return differenceInDays;
     }
@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit {
       differenceInDays = Math.floor(
         differenceInMilliseconds / (1000 * 60 * 60 * 24)
       );
-      return -differenceInDays;
+      return differenceInDays > 0 ? 0 : -differenceInDays - 1;
     } else {
       return differenceInDays;
     }
