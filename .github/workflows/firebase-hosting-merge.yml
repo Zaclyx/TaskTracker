@@ -24,11 +24,14 @@ jobs:
       - name: Build Angular app
         run: npm run build
 
-      - name: Install SonarScanner
+      - name: Download and extract SonarScanner
         run: |
-          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 9D41F3C3
-          echo "deb http://downloads.sourceforge.net/project/sonar-pkg/deb/ binary/" | sudo tee -a /etc/apt/sources.list.d/sonar.list
-          sudo apt-get update && sudo apt-get install -y sonar-scanner
+          curl -OL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip sonar-scanner-cli-4.6.2.2472-linux.zip -d /opt
+
+      - name: Set up SonarScanner environment variables
+        run: |
+          echo "export PATH=$PATH:/opt/sonar-scanner-cli-4.6.2.2472-linux/bin" >> $GITHUB_ENV
 
       - name: Run SonarScanner
         run: sonar-scanner
