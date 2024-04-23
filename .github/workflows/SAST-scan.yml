@@ -1,0 +1,19 @@
+name: Running SAST Scan
+'on': 
+  push:
+    branches:
+      -main
+
+jobs:
+  soos_sast_analysis:
+    name: SOOS SAST Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run SOOS SAST Analysis
+        uses: soos-io/soos-sast-github-action@v1 # GET Latest Version from https://github.com/marketplace/actions/soos-sast
+        with:
+          client_id: ${{ secrets.SOOS_CLIENT_ID }}
+          api_key: ${{ secrets.SOOS_API_KEY }}
+          project_name: tasktracker-a5168
+          sast_path: ""
