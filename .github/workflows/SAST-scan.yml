@@ -2,7 +2,7 @@ name: Running SAST Scan
 'on': 
   push:
     branches:
-      -main
+      - main
 
 jobs:
   soos_sast_analysis:
