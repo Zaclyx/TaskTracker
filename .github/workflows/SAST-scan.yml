@@ -1,32 +1,16 @@
-name: Integration Test on PR
 
-on:
-  pull_request:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
-  test:
+  soos_sast_analysis_example:
+    name: SOOS SAST Analysis Example
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@master
+      - name: Run SOOS SAST Analysis
+        uses: soos-io/soos-sast-github-action@v1 # GET Latest Version from https://github.com/marketplace/actions/soos-sast
         with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-      
-      - name: Link
-        run: npm link
-
-      - name: Run SOOS SAST
-        run: soos-sast --apiURL="https://dev-api.soos.io/api/" --clientId=${{ secrets.SOOS_CLIENT_ID }} --apiKey=${{ secrets.SOOS_API_KEY }} --projectName="tasktracker-a5168"
+          client_id: ${{ secrets.SOOS_CLIENT_ID }}
+          api_key: ${{ secrets.SOOS_API_KEY }}
+          project_name: "tasktracker-a5168"
+          source_code_path: "./src"
