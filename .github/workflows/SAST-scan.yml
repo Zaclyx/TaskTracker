@@ -2,6 +2,7 @@ name: Integration Test on PR
 
 on:
   pull_request:
+  push:
     branches:
       - main
 
