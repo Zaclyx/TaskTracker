@@ -1,3 +1,4 @@
+name: soos dast scan
 on: [push,pull_request]
 
 jobs:
