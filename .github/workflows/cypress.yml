@@ -1,14 +1,27 @@
-name: Cypress tests
-on: push
+name: Cypress Tests
+'on':
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   cypress-run:
-    name: Cypress run
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false 
+      matrix:
+        containers: [1, 2] # Uses 2 parallel instances
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Cypress run
+        # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v6
         with:
-          spec: cypress/e2e/spec.cy.js
+          start: npm start
+          spec: cypress/e2e/spec1.cy.js
+          record: true
+          parallel: true # Runs test in parallel using settings above
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
