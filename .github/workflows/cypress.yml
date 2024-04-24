@@ -15,11 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Cypress run
-        # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v6
         with:
-          start: npm start
-          spec: cypress/e2e/spec.cy.js
           record: true
           parallel: true # Runs test in parallel using settings above
         env:
