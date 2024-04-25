@@ -122,7 +122,6 @@ describe('Weekly Tasks Page', () => {
 
     // Find the select element containing the desired year
     cy.contains('.form-select', yearToSelect).select(yearToSelect);
-    // Wait for elements to load
     cy.wait(2000); // Adjust the time as needed
   });
 
