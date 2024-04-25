@@ -1,5 +1,9 @@
 name: soos dast scan
-on: [push,pull_request]
+'on':
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   soos_dast_baseline_analysis:
