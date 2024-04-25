@@ -46,6 +46,11 @@ export class DashboardComponent implements OnInit {
         this.projectId = results[0]?.projectId;
         this.getTasks();
         this.getProjectDetails();
+
+        if (this.projectId == 'nil')
+          alert(
+            'Please enter a Project ID in your profile before adding new task'
+          );
       });
     });
   }

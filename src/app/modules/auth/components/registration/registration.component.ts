@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private service:SharedService
+    private service: SharedService
   ) {
     this.isLoading$ = this.authService.isLoading$;
     // redirect to home if already logged in
@@ -55,7 +55,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
           ]),
         ],
         email: [
-          'qwe@qwe.qwe',
+          'test@gmail.com',
           Validators.compose([
             Validators.required,
             Validators.email,
@@ -119,7 +119,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   //   });
   //   const newUser = new UserModel();
   //   newUser.setUser(result);
-  
+
   //   const registrationSubscr = this.authService
   //     .registrationFirebase(newUser)
   //     .subscribe({
@@ -142,7 +142,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   //         alert(`Registration failed: ${err.message}`);
   //       }
   //     });
-  
+
   //   this.unsubscribe.push(registrationSubscr);
   // }
 
@@ -154,11 +154,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     });
     const newUser = new UserModel();
     newUser.setUser(result);
-  
+
     const registrationSubscr = this.authService
       .registrationFirebase(newUser)
       .subscribe({
-        next: (firebaseUser) => { // Assuming firebaseUser now includes the full user object
+        next: (firebaseUser) => {
+          // Assuming firebaseUser now includes the full user object
           if (firebaseUser) {
             // Registration successful, now add user details to Firestore
             const userData = {
@@ -166,20 +167,26 @@ export class RegistrationComponent implements OnInit, OnDestroy {
               name: newUser.fullname, // Assuming UserModel has a name field
               joinDate: new Date(), // Use current date for joinDate
               lastLogin: new Date(), // Consider updating this field upon each login
-              role: "user", // Default role
+              projectId: 'nil',
+              role: 'user', // Default role
             };
-  
+
             // Add user data to Firestore (assumes SharedService or similar is injected as sharedService)
-            this.service.addUser({ ...userData, uid: firebaseUser.uid }).then(() => {
-              alert('Registration successful!');
-              //this.router.navigate(['/']);
-              this.authService.sendEmailVerification(firebaseUser)
-            }).catch((firestoreError: any) => {
-              console.error(firestoreError);
-              this.hasError = true;
-              // Handle Firestore error (e.g., display an error message)
-              alert('Registration was successful, but there was an error storing additional user details.');
-            });
+            this.service
+              .addUser({ ...userData, uid: firebaseUser.uid })
+              .then(() => {
+                alert('Registration successful!');
+                //this.router.navigate(['/']);
+                this.authService.sendEmailVerification(firebaseUser);
+              })
+              .catch((firestoreError: any) => {
+                console.error(firestoreError);
+                this.hasError = true;
+                // Handle Firestore error (e.g., display an error message)
+                alert(
+                  'Registration was successful, but there was an error storing additional user details.'
+                );
+              });
           } else {
             // Handle the unlikely case that registration succeeded without a user object
             this.hasError = true;
@@ -190,14 +197,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
           this.hasError = true;
           console.error(err);
           alert(`Registration failed: ${err.message}`);
-        }
+        },
       });
-  
+
     this.unsubscribe.push(registrationSubscr);
   }
-  
-  
-  
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
